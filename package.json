@@ -16,6 +16,7 @@
     "react-native": "0.61.5",
     "react-native-device-info": "^5.5.3",
     "react-native-nearby-api": "0.0.5",
+    "react-native-quiet": "0.0.3",
     "zustand": "^2.2.3"
   },
   "devDependencies": {

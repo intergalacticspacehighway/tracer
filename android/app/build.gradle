@@ -179,6 +179,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-quiet')
     implementation project(':react-native-device-info')
     implementation (project(':react-native-nearby-api')){
         exclude group: "com.google.android.gms"
