@@ -61,8 +61,8 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
             BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
             AdvertiseSettings settings = new AdvertiseSettings.Builder()
-                    .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
-                    .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
+                    .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED)
+                    .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_LOW)
                     .setConnectable(false)
                     .build();
 
@@ -113,12 +113,13 @@ public class BeaconModule extends ReactContextBaseJavaModule {
     };
 
     ScanCallback mScanCallback = new ScanCallback() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public void onScanResult(int callbackType, ScanResult result) {
             String deviceId = new String(result.getScanRecord().getManufacturerSpecificData(1));
             Log.i("BLE", "On ScaN Result " +deviceId );
 //            System.out.println("Power " + result.getRssi()+" : "+ result.getScanRecord().getTxPowerLevel()+": "+result.getTxPower() );
-//            int distance = (int) Math.pow(10d, (result.getTxPower() - result.getRssi()) / (10 * 2));
-//            System.out.println("Distance "+distance);
+            double distance = calculateAccuracy(-59,result.getRssi());
+            System.out.println("Distance "+distance);
 
             if (result == null
                     || result.getDevice() == null)
@@ -135,5 +136,9 @@ public class BeaconModule extends ReactContextBaseJavaModule {
             Log.e("BLE", "Discovery onScanFailed: " + errorCode);
         }
     };
+
+    protected static double calculateAccuracy(int txPower, int rssi) {
+        return Math.pow(10d, ((double) txPower - rssi) / (10 * 2));
+    }
 
 }
