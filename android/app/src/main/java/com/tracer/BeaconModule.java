@@ -22,9 +22,12 @@ import androidx.annotation.RequiresApi;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -61,7 +64,7 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
             BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
             AdvertiseSettings settings = new AdvertiseSettings.Builder()
-                    .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED)
+                    .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
                     .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_LOW)
                     .setConnectable(false)
                     .build();
@@ -118,8 +121,16 @@ public class BeaconModule extends ReactContextBaseJavaModule {
             String deviceId = new String(result.getScanRecord().getManufacturerSpecificData(1));
             Log.i("BLE", "On ScaN Result " +deviceId );
 //            System.out.println("Power " + result.getRssi()+" : "+ result.getScanRecord().getTxPowerLevel()+": "+result.getTxPower() );
-            double distance = calculateAccuracy(-59,result.getRssi());
-            System.out.println("Distance "+distance);
+
+            ReactContext currentContext = getReactApplicationContext();
+
+            WritableMap params = Arguments.createMap();
+            params.putString("deviceId", deviceId);
+            params.putInt("rssi", result.getRssi());
+
+            currentContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit("onBleScan", params);
 
             if (result == null
                     || result.getDevice() == null)

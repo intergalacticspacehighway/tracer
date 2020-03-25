@@ -2,40 +2,46 @@
 import {NearbyAPI} from 'react-native-nearby-api';
 import {PermissionsAndroid} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
+import {NativeModules, DeviceEventEmitter} from 'react-native';
 import {addNearbyUser} from '../store/nearby-people';
 import {uniqueId} from '../utils';
 const nearbyAPI = new NearbyAPI(false);
 
-import RNQuiet from 'react-native-quiet';
+const UUID = 'CDB7950D-73F1-4D4D-8E47-C090502DBD63';
 
-const {unsubscribe} = RNQuiet.addListener(msg => {
-  const {uuid} = JSON.parse(msg);
-  if (uuid !== uniqueId) {
-    console.log('from different device ', msg);
-  }
+PermissionsAndroid.requestPermission(
+  PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+);
+PermissionsAndroid.requestPermission(
+  PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+);
+console.log('NativeModules ', 'hahahaha');
+NativeModules.Beacon.startBroadcast(UUID, '1000000');
+NativeModules.Beacon.startScanning(UUID);
+
+let listener = DeviceEventEmitter.addListener('onBleScan', e => {
+  console.log('ble scan ', e);
+  const dis = getDistance(e.rssi);
+  console.log('diss ', dis);
 });
-// Start listening. (This will ask for microphone permissions!)
-RNQuiet.start('ultrasonic-experimental')
-  .then(() => {
-    // Listen for Messages.
-
-    // Send Messages. (Careful; you can hear your own!)
-    const message = {message: 'hello world!', uuid: uniqueId};
-    setInterval(() => {
-      RNQuiet.send(JSON.stringify(message));
-    }, 3000);
-    // Stop listening.
-    // RNQuiet.stop();
-    // Release the observer.
-    // unsubscribe();
-  })
-  .catch(e => {
-    console.log('reejcted ', e);
-  });
 
 // Distance threshold in meter
 const DISTANCE_THRESHOLD = 10;
 let myLocation: any = null;
+
+function getDistance(rssi: number) {
+  if (rssi === 0) {
+    return -1.0;
+  }
+
+  const ratio = (rssi * 1.0) / 127;
+  if (ratio < 1.0) {
+    return Math.pow(ratio, 10);
+  } else {
+    const accuracy = 0.89976 * Math.pow(ratio, 7.7095) + 0.111;
+    return accuracy;
+  }
+}
 
 // async function watchMyPosition() {
 //   const granted = await PermissionsAndroid.request(

@@ -36,7 +36,6 @@ target 'tracer' do
 
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
-  pod 'react-native-quiet', :path => '../node_modules/react-native-quiet'
 
   target 'tracerTests' do
     inherit! :search_paths
