@@ -179,7 +179,7 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-quiet')
+    implementation 'org.altbeacon:android-beacon-library:2.15.2'
     implementation project(':react-native-device-info')
     implementation (project(':react-native-nearby-api')){
         exclude group: "com.google.android.gms"
