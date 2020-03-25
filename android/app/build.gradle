@@ -179,7 +179,13 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-nearby-api')
+    implementation project(':react-native-device-info')
+    implementation (project(':react-native-nearby-api')){
+        exclude group: "com.google.android.gms"
+    }
+    implementation ("com.google.android.gms:play-services-nearby:15.0.0") {
+        force = true
+    }
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

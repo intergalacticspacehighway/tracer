@@ -2,8 +2,12 @@
 import {NearbyAPI} from 'react-native-nearby-api';
 import {PermissionsAndroid} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
+import {addNearbyUser} from '../store/nearby-people';
+import {uniqueId} from '../utils';
 const nearbyAPI = new NearbyAPI(true);
 
+// Distance threshold in meter
+const DISTANCE_THRESHOLD = 1;
 let myLocation: any = null;
 
 async function getLocation() {
@@ -35,18 +39,22 @@ async function getLocation() {
 
 nearbyAPI.onSubscribeSuccess(async () => {
   console.log('subscribe success');
+  myLocation = await getLocation();
+  nearbyAPI.publish(JSON.stringify({...myLocation, uuid: uniqueId}));
   setInterval(async () => {
     myLocation = await getLocation();
     nearbyAPI.publish(JSON.stringify(myLocation));
-  }, 5000);
+  }, 10000);
 });
 
 nearbyAPI.onFound(message => {
   console.log('Message Found!', typeof message);
-  const otherDeviceLocationData = JSON.parse(message);
-  const {latitude, longitude} = otherDeviceLocationData.coords;
-  const {latitude: myLatitude, longitude: myLongitude} = myLocation.coords;
-  getDistanceFromLatLonInKm(myLatitude, myLongitude, latitude, longitude);
+  onMessage(message);
+});
+
+nearbyAPI.onLost(message => {
+  console.log('Message Lost!');
+  onMessage(message);
 });
 
 ////
@@ -60,11 +68,6 @@ nearbyAPI.onConnected(async message => {
 });
 
 nearbyAPI.onDisconnected(message => {
-  console.log(message);
-});
-
-nearbyAPI.onLost(message => {
-  console.log('Message Lost!');
   console.log(message);
 });
 
@@ -116,3 +119,20 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
+
+const onMessage = (message: string) => {
+  const otherDeviceLocationData = JSON.parse(message);
+  const {uuid, coords, timestamp} = otherDeviceLocationData;
+  if (uuid) {
+    const {latitude: myLatitude, longitude: myLongitude} = myLocation.coords;
+    const distance = getDistanceFromLatLonInKm(
+      myLatitude,
+      myLongitude,
+      coords.latitude,
+      coords.longitude,
+    );
+    if (distance < 0.014) {
+      addNearbyUser({uuid, timestamp});
+    }
+  }
+};
