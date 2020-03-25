@@ -8,17 +8,24 @@ const nearbyAPI = new NearbyAPI(false);
 
 import RNQuiet from 'react-native-quiet';
 
+const {unsubscribe} = RNQuiet.addListener(msg => {
+  const {uuid} = JSON.parse(msg);
+  if (uuid !== uniqueId) {
+    console.log('from different device ', msg);
+  }
+});
 // Start listening. (This will ask for microphone permissions!)
 RNQuiet.start('ultrasonic-experimental')
   .then(() => {
     // Listen for Messages.
-    const {unsubscribe} = RNQuiet.addListener(msg =>
-      console.log('message ', msg),
-    );
+
     // Send Messages. (Careful; you can hear your own!)
-    RNQuiet.send('hello, world!');
+    const message = {message: 'hello world!', uuid: uniqueId};
+    setInterval(() => {
+      RNQuiet.send(JSON.stringify(message));
+    }, 3000);
     // Stop listening.
-    RNQuiet.stop();
+    // RNQuiet.stop();
     // Release the observer.
     // unsubscribe();
   })
