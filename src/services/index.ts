@@ -15,19 +15,18 @@ PermissionsAndroid.requestPermission(
 PermissionsAndroid.requestPermission(
   PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
 );
-console.log('NativeModules ', 'hahahaha');
-NativeModules.Beacon.startBroadcast(UUID, '1000000');
+
 NativeModules.Beacon.startScanning(UUID);
+
+export const startScanAndBroadcast = (id: string) => {
+  NativeModules.Beacon.startBroadcast(UUID, id);
+};
 
 let listener = DeviceEventEmitter.addListener('onBleScan', e => {
   console.log('ble scan ', e);
   const dis = getDistance(e.rssi);
   console.log('diss ', dis);
 });
-
-// Distance threshold in meter
-const DISTANCE_THRESHOLD = 10;
-let myLocation: any = null;
 
 function getDistance(rssi: number) {
   if (rssi === 0) {
@@ -43,6 +42,9 @@ function getDistance(rssi: number) {
   }
 }
 
+// // Distance threshold in meter
+// const DISTANCE_THRESHOLD = 10;
+// let myLocation: any = null;
 // async function watchMyPosition() {
 //   const granted = await PermissionsAndroid.request(
 //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
