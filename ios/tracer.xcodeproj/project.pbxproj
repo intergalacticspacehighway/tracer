@@ -20,6 +20,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* tracerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* tracerTests.m */; };
 		4497CEC022356C3E4406D2B6 /* libPods-tracer-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB791970BC63A401569B279 /* libPods-tracer-tvOS.a */; };
 		C3553107B9BF39314654F921 /* libPods-tracerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E62ADD0EBD5840F4D05E86 /* libPods-tracerTests.a */; };
+		EF872030B17C4EEB9FB39004 /* libRNNearbyApi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABAC4AAF6F604A5F9AC95888 /* libRNNearbyApi.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,8 @@
 		D2B9EC177682D88739A14B2F /* Pods-tracer-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracer-tvOS.release.xcconfig"; path = "Target Support Files/Pods-tracer-tvOS/Pods-tracer-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		DB0DB2A4D1324594BE00A7C0 /* RNNearbyApi.xcodeproj */ = {isa = PBXFileReference; name = "RNNearbyApi.xcodeproj"; path = "../node_modules/react-native-nearby-api/ios/RNNearbyApi.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		ABAC4AAF6F604A5F9AC95888 /* libRNNearbyApi.a */ = {isa = PBXFileReference; name = "libRNNearbyApi.a"; path = "libRNNearbyApi.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +86,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B77BED7E33E2A82670D6ABF /* libPods-tracer.a in Frameworks */,
+				EF872030B17C4EEB9FB39004 /* libRNNearbyApi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +156,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				DB0DB2A4D1324594BE00A7C0 /* RNNearbyApi.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -285,7 +290,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 940;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -598,6 +603,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tracer.app/tracer";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-nearby-api/ios/Classes",
+				);
 			};
 			name = Debug;
 		};
@@ -618,6 +631,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tracer.app/tracer";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-nearby-api/ios/Classes",
+				);
 			};
 			name = Release;
 		};
@@ -638,6 +659,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = tracer;
 				VERSIONING_SYSTEM = "apple-generic";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-nearby-api/ios/Classes",
+				);
 			};
 			name = Debug;
 		};
@@ -657,6 +682,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = tracer;
 				VERSIONING_SYSTEM = "apple-generic";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-nearby-api/ios/Classes",
+				);
 			};
 			name = Release;
 		};
@@ -685,6 +714,14 @@
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-nearby-api/ios/Classes",
+				);
 			};
 			name = Debug;
 		};
@@ -713,6 +750,14 @@
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-nearby-api/ios/Classes",
+				);
 			};
 			name = Release;
 		};
@@ -740,6 +785,14 @@
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tracer-tvOS.app/tracer-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-nearby-api/ios/Classes",
+				);
 			};
 			name = Debug;
 		};
@@ -767,6 +820,14 @@
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tracer-tvOS.app/tracer-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-nearby-api/ios/Classes",
+				);
 			};
 			name = Release;
 		};
