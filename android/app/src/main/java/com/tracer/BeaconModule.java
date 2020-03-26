@@ -10,6 +10,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.os.Build;
 import android.os.ParcelUuid;
 import android.util.Log;
 import com.facebook.react.bridge.Arguments;
@@ -53,7 +54,7 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
             BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
             AdvertiseSettings settings = new AdvertiseSettings.Builder()
-                    .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
+                    .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED)
                     .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_LOW)
                     .setConnectable(false)
                     .build();
@@ -120,22 +121,34 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
     ScanCallback mScanCallback = new ScanCallback() {
         public void onScanResult(int callbackType, ScanResult result) {
-            String deviceId = new String(result.getScanRecord().getManufacturerSpecificData(1));
-            Log.i("BLE", "On ScaN Result " +deviceId );
+            if (result == null || result.getDevice() == null){
+                return;
+
+            }
+
+            if(result.getScanRecord().getServiceUuids().get(0) != null){
+
+            String deviceId = result.getScanRecord().getServiceUuids().get(0).getUuid().toString();
+            Log.i("BLE", "On ScaN Result " +result.getScanRecord().getServiceUuids().get(0) );
 //            System.out.println("Power " + result.getRssi()+" : "+ result.getScanRecord().getTxPowerLevel()+": "+result.getTxPower() );
 
             WritableMap params = Arguments.createMap();
             params.putString("deviceId", deviceId);
             params.putInt("rssi", result.getRssi());
 
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    int txPower = result.getTxPower();
+                    params.putInt("txPower", txPower);
+                }
+
+
             ReactContext currentContext = getReactApplicationContext();
             currentContext
                     .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                     .emit("onScanResult", params);
 
-            if (result == null
-                    || result.getDevice() == null)
-                return;
+            }
+
         }
 
         @Override

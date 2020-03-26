@@ -1,5 +1,6 @@
 import {NativeModules, DeviceEventEmitter} from 'react-native';
 import {addNearbyUser} from 'store';
+import {IOnScanResult} from 'types';
 
 const UUID = 'CDB7950D-73F1-4D4D-8E47-C090502DBD63';
 
@@ -11,13 +12,14 @@ export const startScanAndBroadcast = () => {
   NativeModules.Beacon.startBroadcast(UUID);
 };
 
-DeviceEventEmitter.addListener('onScanResult', e => {
-  console.log('ble scan ', e);
-  const distance = getDistance(e.rssi);
-  console.log('distance', distance);
-
+DeviceEventEmitter.addListener('onScanResult', (e: IOnScanResult) => {
+  const distance = getDistance(e.rssi, e.txPower);
+  console.log('onScanResult ', e, distance);
   if (distance <= DISTANCE_THRESHOLD) {
-    addNearbyUser({uuid: e.uuid});
+    addNearbyUser({
+      uuid: e.deviceId,
+      distance: Number(distance.toPrecision(4)),
+    });
   }
 });
 
@@ -33,12 +35,12 @@ DeviceEventEmitter.addListener('onBroadcastFailure', e => {
   console.log('onBroadcastFailure ', e);
 });
 
-function getDistance(rssi: number) {
+function getDistance(rssi: number, txPower: number = 127) {
   if (rssi === 0) {
     return -1.0;
   }
 
-  const ratio = (rssi * 1.0) / 127;
+  const ratio = (rssi * 1.0) / txPower;
   if (ratio < 1.0) {
     return Math.pow(ratio, 10);
   } else {
