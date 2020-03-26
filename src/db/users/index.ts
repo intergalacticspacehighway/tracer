@@ -6,8 +6,6 @@ const TABLE_NAME = 'nearby_users';
 export const createOrUpdateUserRecord = (user: INearbyUser) => {
   console.log('creating boi ', user);
   db.transaction(function(txn: any) {
-    // txn.executeSql('DROP TABLE IF EXISTS nearby_users', []);
-
     txn.executeSql(
       `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
         uuid VARCHAR(50) PRIMARY KEY NOT NULL, distance FLOAT(8) NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`,
@@ -23,15 +21,20 @@ export const createOrUpdateUserRecord = (user: INearbyUser) => {
 
 export const getNearbyPeopleList = () => {
   return new Promise((resolve, reject) => {
-    db.readTransaction(function(t) {
-      t.executeSql(`SELECT * FROM ${TABLE_NAME}`, [], function(t, r) {
-        resolve(r.rows);
-      });
-    });
+    db.readTransaction(
+      function(t: any) {
+        t.executeSql(`SELECT * FROM ${TABLE_NAME}`, [], function(t, r) {
+          resolve(r.rows._array);
+        });
+      },
+      function(e: any) {
+        reject(e);
+      },
+    );
   });
 };
 
-export const testDB = () => {
+const testDB = () => {
   db.transaction(function(txn: any) {
     txn.executeSql(`SELECT * FROM ${TABLE_NAME}`, [], function(
       tx: any,
@@ -44,6 +47,12 @@ export const testDB = () => {
   });
 };
 
+const dropTable = () => {
+  db.transaction(function(txn: any) {
+    txn.executeSql('DROP TABLE nearby_users', []);
+  });
+};
+
 setTimeout(() => {
-  testDB();
+  // dropTable();
 }, 3000);
