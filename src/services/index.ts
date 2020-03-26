@@ -8,7 +8,7 @@ const UUID = 'CDB7950D-73F1-4D4D-8E47-C090502DBD63';
 console.log('native modules ', NativeModules.Beacon.startScanning(UUID));
 
 export const startScanAndBroadcast = (id: string) => {
-  NativeModules.Beacon.startBroadcast(UUID, id);
+  NativeModules.Beacon.startBroadcast(UUID);
 };
 
 let listener = DeviceEventEmitter.addListener('onBleScan', e => {
