@@ -14,9 +14,7 @@
     "date-fns": "^2.11.0",
     "react": "16.9.0",
     "react-native": "0.61.5",
-    "react-native-ble-manager": "^7.2.0",
     "react-native-device-info": "^5.5.3",
-    "react-native-nearby-api": "0.0.5",
     "zustand": "^2.2.3"
   },
   "devDependencies": {
