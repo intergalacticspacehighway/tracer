@@ -21,6 +21,16 @@ export const createOrUpdateUserRecord = (user: INearbyUser) => {
   });
 };
 
+export const getNearbyPeopleList = () => {
+  return new Promise((resolve, reject) => {
+    db.readTransaction(function(t) {
+      t.executeSql(`SELECT * FROM ${TABLE_NAME}`, [], function(t, r) {
+        resolve(r.rows);
+      });
+    });
+  });
+};
+
 export const testDB = () => {
   db.transaction(function(txn: any) {
     txn.executeSql(`SELECT * FROM ${TABLE_NAME}`, [], function(

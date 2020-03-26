@@ -24,3 +24,5 @@ export const theme = {
       .string(),
   },
 };
+
+export {colors};

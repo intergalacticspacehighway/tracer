@@ -5,18 +5,20 @@ import {Nearby} from './src/components/nearby';
 import {Provider as PaperProvider, Appbar} from 'react-native-paper';
 import {theme} from './src/theme';
 import {colors} from './src/theme/colors';
+import {BottomTabNavigator} from 'navigators';
 
 const App = () => {
   return (
     <PaperProvider theme={theme}>
+      <Appbar.Header>
+        <Appbar.Action onPress={() => {}} icon="arrow-left" />
+      </Appbar.Header>
+      <SafeAreaView>
+        <StatusBar backgroundColor={colors['cool-blue-100']} />
+        {/* <Nearby /> */}
+      </SafeAreaView>
       <NavigationContainer>
-        <Appbar.Header>
-          <Appbar.Action onPress={() => {}} icon="arrow-left" />
-        </Appbar.Header>
-        <SafeAreaView>
-          <StatusBar backgroundColor={colors['cool-blue-100']} />
-          <Nearby />
-        </SafeAreaView>
+        <BottomTabNavigator />
       </NavigationContainer>
     </PaperProvider>
   );
