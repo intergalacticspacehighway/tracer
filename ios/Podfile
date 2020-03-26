@@ -45,12 +45,12 @@ target 'tracer' do
   use_native_modules!
 end
 
-target 'tracer-tvOS' do
-  # Pods for tracer-tvOS
+# target 'tracer-tvOS' do
+#   # Pods for tracer-tvOS
 
-  target 'tracer-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
+#   target 'tracer-tvOSTests' do
+#     inherit! :search_paths
+#     # Pods for testing
+  # end
 
-end
+# end

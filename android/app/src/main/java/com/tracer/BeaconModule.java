@@ -10,26 +10,16 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
 import android.os.ParcelUuid;
-import android.text.TextUtils;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
-
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -76,11 +66,8 @@ public class BeaconModule extends ReactContextBaseJavaModule {
     }
 
 
-
-    @ReactMethod
+        @ReactMethod
     public void startScanning(final String uuid) {
-
-         Handler mHandler = new Handler();
 
         BluetoothLeScanner mBluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
         ScanFilter filter = new ScanFilter.Builder()
@@ -94,7 +81,6 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
         Log.i("BLE", "starting scanning");
 
-
         mBluetoothLeScanner.startScan(Collections.singletonList(filter), settings, mScanCallback);
     }
 
@@ -103,6 +89,15 @@ public class BeaconModule extends ReactContextBaseJavaModule {
         @Override
         public void onStartSuccess(AdvertiseSettings settingsInEffect) {
             Log.i("BLE", "Advertising onStartSuccess " + settingsInEffect);
+            ReactContext currentContext = getReactApplicationContext();
+
+            WritableMap params = Arguments.createMap();
+            params.putInt("txPowerLevel", settingsInEffect.getTxPowerLevel());
+            params.putInt("mode", settingsInEffect.getMode());
+
+            currentContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit("onBroadcastSuccess", params);
 
             super.onStartSuccess(settingsInEffect);
         }
@@ -110,26 +105,33 @@ public class BeaconModule extends ReactContextBaseJavaModule {
         @Override
         public void onStartFailure(int errorCode) {
             Log.e("BLE", "Advertising onStartFailure: " + errorCode);
+
+            WritableMap params = Arguments.createMap();
+            params.putInt("error", errorCode);
+            ReactContext currentContext = getReactApplicationContext();
+
+            currentContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit("onBroadcastFailure", params);
+
             super.onStartFailure(errorCode);
         }
     };
 
     ScanCallback mScanCallback = new ScanCallback() {
-        @RequiresApi(api = Build.VERSION_CODES.O)
         public void onScanResult(int callbackType, ScanResult result) {
             String deviceId = new String(result.getScanRecord().getManufacturerSpecificData(1));
             Log.i("BLE", "On ScaN Result " +deviceId );
 //            System.out.println("Power " + result.getRssi()+" : "+ result.getScanRecord().getTxPowerLevel()+": "+result.getTxPower() );
 
-            ReactContext currentContext = getReactApplicationContext();
-
             WritableMap params = Arguments.createMap();
             params.putString("deviceId", deviceId);
             params.putInt("rssi", result.getRssi());
 
+            ReactContext currentContext = getReactApplicationContext();
             currentContext
                     .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit("onBleScan", params);
+                    .emit("onScanResult", params);
 
             if (result == null
                     || result.getDevice() == null)
@@ -143,6 +145,15 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
         @Override
         public void onScanFailed(int errorCode) {
+
+            WritableMap params = Arguments.createMap();
+            params.putInt("error", errorCode);
+            ReactContext currentContext = getReactApplicationContext();
+
+            currentContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit("onScanFailed", params);
+
             Log.e("BLE", "Discovery onScanFailed: " + errorCode);
         }
     };

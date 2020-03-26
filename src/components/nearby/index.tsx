@@ -1,13 +1,23 @@
-import React, {useState} from 'react';
-import {View, Text, ScrollView, TextInput, Button} from 'react-native';
-import '../../services/index';
+import React, {useEffect} from 'react';
+import {View, Text, ScrollView, TextInput, Button, Alert} from 'react-native';
 import {uniqueId, formatTimestamp} from '../../utils';
 import {useNearbyPeopleStore} from '../../store/nearby-people';
 import {startScanAndBroadcast} from '../../services/index';
+import {Switch} from 'react-native-paper';
+import {BluetoothStatus} from 'react-native-bluetooth-status';
+async function checkBluetoothState() {
+  const isEnabled = await BluetoothStatus.state();
+  if (!isEnabled) {
+    Alert.alert('Enable bluetooth');
+  }
+  // false
+}
 
 function Nearby() {
+  useEffect(() => {
+    checkBluetoothState();
+  }, []);
   const {people} = useNearbyPeopleStore();
-  const [id, setId] = useState('');
 
   const startProcess = () => {
     startScanAndBroadcast(id);
