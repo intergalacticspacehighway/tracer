@@ -34,12 +34,10 @@ class Beacon: NSObject, CBPeripheralManagerDelegate,CBCentralManagerDelegate
   func startBroadcast(uuid: String) -> Void
   {
     
+    manager = CBCentralManager(delegate: self, queue: nil)
     
-    manager?.scanForPeripherals(withServices: nil, options: nil)
 
-    DispatchQueue.main.asyncAfter(deadline: .now() + 60.0) {
-        self.stopScanForBLEDevice()
-    }
+    
     
     
     
@@ -74,7 +72,7 @@ class Beacon: NSObject, CBPeripheralManagerDelegate,CBCentralManagerDelegate
           peripheralManager.stopAdvertising()
       }
   }
-  
+//  centralManagerDidUpdateStat
   func updateDistance(_ distance: CLProximity)
   {
       
@@ -100,6 +98,17 @@ class Beacon: NSObject, CBPeripheralManagerDelegate,CBCentralManagerDelegate
       }
   func centralManagerDidUpdateState(_ central: CBCentralManager) {
       print(central.state)
+    if central.state == .poweredOn
+    {
+      if !(central.isScanning) {
+        manager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey : true])
+        DispatchQueue.main.asyncAfter(deadline: .now() + 60.0) {
+            self.stopScanForBLEDevice()
+        }
+      }
+      
+    }
+    
   }
   @objc(startScanning:)
   func startScanning(uuid: String) -> Void
