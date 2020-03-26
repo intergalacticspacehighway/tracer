@@ -50,7 +50,7 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void startBroadcast(final String uuid, final String deviceId) {
+    public void startBroadcast(final String uuid) {
 
         try {
             Log.i("BLE ",uuid);
@@ -58,7 +58,6 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
             AdvertiseData data = new AdvertiseData.Builder()
                     .addServiceUuid(pUuid)
-                    .addManufacturerData(1, deviceId.getBytes())
                     .build();
 
 
