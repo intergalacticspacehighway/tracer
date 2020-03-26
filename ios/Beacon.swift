@@ -10,17 +10,12 @@ import Foundation
 
 @objc(Beacon)
 class Beacon: NSObject {
-  private var count = 0
-
+  
   @objc
   static func requiresMainQueueSetup() -> Bool {
     return true
   }
   
- @objc
-  func constantsToExport() -> [AnyHashable : Any]! {
-    return ["initialCount": 0]
-  }
   
   @objc
   func startBroadcast(uuid: String) -> Void {
