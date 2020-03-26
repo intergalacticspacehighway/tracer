@@ -9,7 +9,17 @@
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "baseUrl": "./",
+    "paths": {
+      "components": ["./src/components"],
+      "db": ["./src/db"],
+      "navigators": ["./src/navigators"],
+      "services": ["./src/services"],
+      "store": ["./src/store"],
+      "types": ["./src/types"],
+      "utils": ["./src/utils"]
+    }
   },
   "exclude": [
     "node_modules",

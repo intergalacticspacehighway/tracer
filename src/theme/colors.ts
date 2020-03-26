@@ -1,0 +1,16 @@
+export const colors = {
+  'cool-black-80': '#3c4245',
+  'cool-black-100': '#000',
+  'cool-grey-050': '#F5F7FA',
+  'cool-grey-100': '#E4E7EB',
+  'cool-grey-200': '#CBD2D9',
+  'cool-grey-300': '#9AA5B1',
+  'cool-grey-400': '#7B8794',
+  'cool-grey-500': '#616E7C',
+  'cool-grey-600': '#52606D',
+  'cool-grey-700': '#3E4C59',
+  'cool-grey-800': '#323F4B',
+  'cool-grey-900': '#1F2933',
+  'cool-blue-80': '#008dc9',
+  'cool-blue-100': '#1565c0',
+};

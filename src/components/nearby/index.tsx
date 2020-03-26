@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 import {View, Text, ScrollView, Button, Alert} from 'react-native';
-import {uniqueId} from '../../utils';
-import {startScanAndBroadcast} from '../../services/index';
+import {startScanAndBroadcast} from 'services';
 import {Switch} from 'react-native-paper';
+//@ts-ignore
 import {BluetoothStatus} from 'react-native-bluetooth-status';
 
 async function checkBluetoothState() {
@@ -24,7 +24,6 @@ function Nearby() {
 
   return (
     <View>
-      <Text>My uuid: {uniqueId}</Text>
       <Button onPress={startProcess} title="Connect"></Button>
 
       <ScrollView>
