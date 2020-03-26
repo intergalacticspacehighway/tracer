@@ -1,7 +1,5 @@
-import DeviceInfo from 'react-native-device-info';
 import {format} from 'date-fns';
 import {PermissionsAndroid, Platform} from 'react-native';
-let uniqueId = DeviceInfo.getUniqueId();
 
 export const formatTimestamp = (timestamp: number) => {
   return format(new Date(timestamp), 'do MMM yyyy KK:mm aaaa');

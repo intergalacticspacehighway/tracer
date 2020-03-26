@@ -5,16 +5,29 @@ import {addNearbyUser} from '../store/nearby-people';
 import {uniqueId} from '../utils';
 
 const UUID = 'CDB7950D-73F1-4D4D-8E47-C090502DBD63';
-console.log('native modules ', NativeModules.Beacon.startScanning(UUID));
 
-export const startScanAndBroadcast = (id: string) => {
+NativeModules.Beacon.startScanning(UUID);
+
+export const startScanAndBroadcast = () => {
   NativeModules.Beacon.startBroadcast(UUID);
 };
 
-let listener = DeviceEventEmitter.addListener('onBleScan', e => {
+DeviceEventEmitter.addListener('onScanResult', e => {
   console.log('ble scan ', e);
   const dis = getDistance(e.rssi);
   console.log('diss ', dis);
+});
+
+DeviceEventEmitter.addListener('onScanFailed', e => {
+  console.log('onScanFailed ', e);
+});
+
+DeviceEventEmitter.addListener('onBroadcastSuccess', e => {
+  console.log('onBroadcastSuccess', e);
+});
+
+DeviceEventEmitter.addListener('onBroadcastFailure', e => {
+  console.log('onBroadcastFailure ', e);
 });
 
 function getDistance(rssi: number) {

@@ -23,6 +23,7 @@
     "react-native-reanimated": "^1.7.1",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.4.0",
+    "react-native-sqlite-2": "^3.0.1",
     "zustand": "^2.2.3"
   },
   "devDependencies": {
