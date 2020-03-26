@@ -1,22 +1,11 @@
 //@ts-ignore
-import {NearbyAPI} from 'react-native-nearby-api';
-import {PermissionsAndroid} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import {NativeModules, DeviceEventEmitter} from 'react-native';
 import {addNearbyUser} from '../store/nearby-people';
 import {uniqueId} from '../utils';
-const nearbyAPI = new NearbyAPI(false);
 
 const UUID = 'CDB7950D-73F1-4D4D-8E47-C090502DBD63';
-
-PermissionsAndroid.requestPermission(
-  PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-);
-PermissionsAndroid.requestPermission(
-  PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-);
-
-NativeModules.Beacon.startScanning(UUID);
+console.log('native modules ', NativeModules.Beacon.startScanning(UUID));
 
 export const startScanAndBroadcast = (id: string) => {
   NativeModules.Beacon.startBroadcast(UUID, id);

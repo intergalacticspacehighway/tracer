@@ -28,10 +28,10 @@ import {Nearby} from './src/components/nearby';
 
 const App: () => React$Node = () => {
   return (
-    <>
+    <SafeAreaView>
       <StatusBar barStyle="dark-content" />
       <Nearby />
-    </>
+    </SafeAreaView>
   );
 };
 
