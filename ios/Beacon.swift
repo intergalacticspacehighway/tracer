@@ -91,11 +91,22 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
         print(peripheral.state)
         print(RSSI)
         print(advertisementData)
+        if let serviceUUIDs = advertisementData["kCBAdvDataServiceUUIDs"] as? NSArray
+        {
+          if serviceUUIDs.count > 0
+          {
+            ///
+              sendEvent(withName: "onScanResult", body: [
+              "rssi":RSSI,
+              "deviceId":serviceUUIDs[0]
+                
+              ])
+          }
+          
+        }
         
-        sendEvent(withName: "onScanResult", body: [
-          "rssi":RSSI,
-          "deviceId":peripheral.identifier
-          ])
+        
+        
       }
     
       
@@ -106,9 +117,9 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
     {
       if !(central.isScanning) {
         manager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey : true])
-        DispatchQueue.main.asyncAfter(deadline: .now() + 60.0) {
-            self.stopScanForBLEDevice()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 60.0) {
+//            self.stopScanForBLEDevice()
+//        }
       }
       
     }
