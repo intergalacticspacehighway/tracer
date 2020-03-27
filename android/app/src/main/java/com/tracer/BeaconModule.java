@@ -2,33 +2,33 @@ package com.tracer;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.AdvertiseCallback;
-import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
-import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.Intent;
 import android.os.Build;
 import android.os.ParcelUuid;
 import android.util.Log;
+
+import androidx.core.content.ContextCompat;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-
-import java.util.Collections;
+import org.altbeacon.beacon.BeaconTransmitter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class BeaconModule extends ReactContextBaseJavaModule {
+    private static final char[] HEX = "0123456789ABCDEF".toCharArray();
 
     //constructor
     public BeaconModule(ReactApplicationContext reactContext) {
@@ -45,8 +45,10 @@ public class BeaconModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void stopBroadcast() {
         Log.i("BLE","stopping broadcast");
-        BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
-        advertiser.stopAdvertising(advertisingCallback);
+        Intent serviceIntent = new Intent(getReactApplicationContext(), BeaconTransmitterService.class);
+
+        getReactApplicationContext().stopService(serviceIntent);
+
 
     }
 
@@ -64,21 +66,16 @@ public class BeaconModule extends ReactContextBaseJavaModule {
             Log.i("BLE ",uuid);
             ParcelUuid pUuid = new ParcelUuid(UUID.fromString(uuid));
 
-            AdvertiseData data = new AdvertiseData.Builder()
-                    .addServiceUuid(pUuid)
-                    .build();
+            int result = BeaconTransmitter.checkTransmissionSupported(getReactApplicationContext());
+            if(result == BeaconTransmitter.SUPPORTED) {
+                Intent serviceIntent = new Intent(getReactApplicationContext(), BeaconTransmitterService.class);
+                serviceIntent.putExtra("uuid", uuid);
+                ContextCompat.startForegroundService(getReactApplicationContext(), serviceIntent);
 
-
-            BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
-            AdvertiseSettings settings = new AdvertiseSettings.Builder()
-                    .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED)
-                    .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_LOW)
-                    .setConnectable(false)
-                    .build();
-
-            advertiser.startAdvertising(settings, data, advertisingCallback);
+            }
 
         } catch (Exception e) {
+            Log.i("BLE",e.getMessage());
             e.printStackTrace();
         }
     }
@@ -87,10 +84,12 @@ public class BeaconModule extends ReactContextBaseJavaModule {
         @ReactMethod
     public void startScanning(final String uuid) {
 
+
+
         BluetoothLeScanner mBluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
-        ScanFilter filter = new ScanFilter.Builder()
-                .setServiceUuid(new ParcelUuid(UUID.fromString(uuid)))
-                .build();
+//        ScanFilter filter = new ScanFilter.Builder()
+//                .setServiceUuid(new ParcelUuid(UUID.fromString(uuid)))
+//                .build();
 
 
         ScanSettings settings = new ScanSettings.Builder()
@@ -100,8 +99,10 @@ public class BeaconModule extends ReactContextBaseJavaModule {
         Log.i("BLE", "starting scanning");
 
 
-        mBluetoothLeScanner.startScan(Collections.singletonList(filter), settings, mScanCallback);
+        mBluetoothLeScanner.startScan(mScanCallback);
+
     }
+
 
 
     AdvertiseCallback advertisingCallback = new AdvertiseCallback() {
@@ -141,10 +142,15 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
         WritableMap getReadableMap(ScanResult result) {
 
-            String deviceId = result.getScanRecord().getServiceUuids().get(0).getUuid().toString();
+            byte[] uuidBytes = Arrays.copyOfRange(result.getScanRecord().getBytes(), 6, 22);
+
+            String uuidWithoutDash = toHexString(uuidBytes);
+
+            String uuid = uuidWithoutDash.substring(0,8)+"-"+uuidWithoutDash.substring(8,12)+"-"+uuidWithoutDash.substring(12,16)+"-"+uuidWithoutDash.substring(16,20)+"-"+uuidWithoutDash.substring(20);
+//            String deviceId = result.getScanRecord().getServiceUuids().get(0).getUuid().toString();
 
             WritableMap params = Arguments.createMap();
-            params.putString("deviceId", deviceId);
+            params.putString("deviceId", uuid);
             params.putInt("rssi", result.getRssi());
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -160,10 +166,12 @@ public class BeaconModule extends ReactContextBaseJavaModule {
                 return;
 
             }
+//            result.getAdvertisingSid();
 
-            if(result.getScanRecord().getServiceUuids().get(0) != null){
 
-            Log.i("BLE", "On ScaN Result " +result.getScanRecord().getServiceUuids().get(0) );
+//            if(result.getScanRecord().getServiceUuids() != null && result.getScanRecord().getServiceUuids().get(0) != null){
+
+//            Log.i("BLE", "On ScaN Result " +result.getScanRecord().getServiceUuids().get(0) );
 //            System.out.println("Power " + result.getRssi()+" : "+ result.getScanRecord().getTxPowerLevel()+": "+result.getTxPower() );
 
               WritableMap  params = this.getReadableMap(result);
@@ -176,7 +184,7 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
             }
 
-        }
+//        }
 
         @Override
         public void onBatchScanResults(List<ScanResult> results) {
@@ -211,10 +219,14 @@ public class BeaconModule extends ReactContextBaseJavaModule {
         }
     };
 
-    protected static double calculateAccuracy(int txPower, int rssi) {
-        return Math.pow(10d, ((double) txPower - rssi) / (10 * 2));
+    static String toHexString(byte[] bytes) {
+        char[] chars = new char[bytes.length * 2];
+        for (int i = 0; i < bytes.length; i++) {
+            int c = bytes[i] & 0xFF;
+            chars[i * 2] = HEX[c >>> 4];
+            chars[i * 2 + 1] = HEX[c & 0x0F];
+        }
+        return new String(chars).toLowerCase();
     }
-
-
 
 }

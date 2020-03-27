@@ -67,8 +67,8 @@ function Nearby() {
     }
 
     if (btStatus) {
-      BLE.startBroadcast();
-      BLE.startScanning();
+      // BLE.startBroadcast();
+      // BLE.startScanning();
     }
     return () => {
       scanListener.current.remove();
@@ -78,11 +78,11 @@ function Nearby() {
 
   return (
     <View>
-      {/* <Button onPress={BLE.startBroadcast} title="Broadcast"></Button>
+      <Button onPress={BLE.startBroadcast} title="Broadcast"></Button>
       <Button onPress={BLE.stopBroadcast} title="Stop broadcast"></Button>
 
       <Button onPress={BLE.startScanning} title="Scan"></Button>
-      <Button onPress={BLE.stopScanning} title="Stop Scan"></Button> */}
+      <Button onPress={BLE.stopScanning} title="Stop Scan"></Button>
 
       <ScrollView>
         {detectedPerson.uuid ? (

@@ -26,7 +26,9 @@ export const permissionMiddleWare = async () => {
   }
 };
 
-export function getDistance(rssi: number, txPower: number = 127) {
+permissionMiddleWare();
+
+export function getDistance(rssi: number, txPower: number = 59) {
   if (rssi === 0) {
     return -1.0;
   }

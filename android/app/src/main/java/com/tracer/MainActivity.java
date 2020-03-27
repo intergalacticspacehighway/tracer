@@ -1,5 +1,8 @@
 package com.tracer;
 
+import android.content.Intent;
+import android.util.Log;
+
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
@@ -11,5 +14,15 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "tracer";
+  }
+
+  @Override
+  protected void onDestroy() {
+    Log.i("Destroy", "Main app destroy");
+    Intent serviceIntent = new Intent(getApplicationContext(), BeaconTransmitterService.class);
+
+    getApplicationContext().stopService(serviceIntent);
+
+    super.onDestroy();
   }
 }
