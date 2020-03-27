@@ -1,7 +1,16 @@
-//@ts-ignore
-import SQLite from 'react-native-sqlite-2';
+import {NearbyPeople} from './model';
+import {Database} from '@nozbe/watermelondb';
+import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
+import {schema} from './model/schema';
 
-const db = SQLite.openDatabase('app.db', '1.0', '', 1);
+const adapter = new SQLiteAdapter({
+  schema,
+});
 
-export {db};
-export * from './users';
+const database = new Database({
+  adapter,
+  modelClasses: [NearbyPeople],
+  actionsEnabled: true,
+});
+
+export {database};

@@ -1,10 +1,11 @@
 import React, {useReducer, useEffect} from 'react';
-import {getNearbyPeopleList} from 'db';
 import {ActivityIndicator, Text} from 'react-native-paper';
 import {View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {INearbyUser} from 'types';
 import {useIsFocused} from '@react-navigation/native';
+import {getNearbyPeopleList} from '../../db/users';
+import {formatTimestamp} from 'utils';
 
 const types = {
   loading: 'loading',
@@ -40,7 +41,6 @@ export function History() {
       try {
         dispatch({type: types.loading});
         const nearbyPeople = await getNearbyPeopleList();
-        console.log('nearby people ', nearbyPeople);
         dispatch({type: types.success, payload: nearbyPeople});
       } catch (e) {
         dispatch({
@@ -49,15 +49,7 @@ export function History() {
         });
       }
     }
-    const interval = setInterval(() => {
-      if (isFocused) {
-        getData();
-      }
-    }, 3000);
-
     getData();
-
-    return () => clearInterval(interval);
   }, [isFocused]);
 
   //   if (state.status === 'loading') {
@@ -82,7 +74,7 @@ export function History() {
                 <Text>Distance: {user.distance} m</Text>
                 <Text>
                   Created at :{'     '}
-                  {user.created_at}
+                  {formatTimestamp(user.createdAt)}
                 </Text>
               </View>
             );

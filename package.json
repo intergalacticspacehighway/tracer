@@ -10,6 +10,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@nozbe/watermelondb": "^0.16.0",
+    "@nozbe/with-observables": "^1.0.5",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.7",
     "@react-navigation/material-bottom-tabs": "^5.1.6",
@@ -27,12 +29,12 @@
     "react-native-reanimated": "^1.7.1",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.4.0",
-    "react-native-sqlite-2": "^3.0.1",
     "react-native-vector-icons": "^6.6.0",
     "zustand": "^2.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/runtime": "^7.6.2",
     "@react-native-community/eslint-config": "^0.0.5",
     "@types/jest": "^25.1.4",

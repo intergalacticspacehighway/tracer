@@ -1,6 +1,6 @@
 import create from 'zustand';
 import {INearbyUser} from 'types';
-import {createOrUpdateUserRecord} from 'db';
+import {createOrUpdateUserRecord} from '../../db/users';
 
 const [useNearbyPeopleStore, api] = create(() => ({
   people: {} as {
@@ -9,17 +9,6 @@ const [useNearbyPeopleStore, api] = create(() => ({
 }));
 
 const addNearbyUser = (user: INearbyUser) => {
-  // const state = api.getState();
-  // api.setState({
-  //   ...state,
-  //   people: {
-  //     [user.uuid]: {
-  //       ...state.people[user.uuid],
-  //       uuid: user.uuid,
-  //       timestamp: user.timestamp,
-  //     },
-  //   },
-  // });
   createOrUpdateUserRecord(user);
 };
 

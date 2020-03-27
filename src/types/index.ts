@@ -2,7 +2,7 @@ export interface INearbyUser {
   uuid: string;
   location?: {lat: number; long: number};
   distance: number;
-  created_at?: any;
+  createdAt?: any;
 }
 
 export interface IOnScanResult {

@@ -1,50 +1,45 @@
-import {db} from '../index';
+import {database} from '../index';
 import {INearbyUser} from '../../types';
+import {Q} from '@nozbe/watermelondb';
 
-const TABLE_NAME = 'nearby_users';
+const nearbyPeopleCollection = database.collections.get('nearbyPeople');
 
-export const createOrUpdateUserRecord = (user: INearbyUser) => {
-  console.log('creating boi ', user);
-  db.transaction(function(txn: any) {
-    txn.executeSql(
-      `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
-        uuid VARCHAR(50) PRIMARY KEY NOT NULL, distance FLOAT(8) NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`,
-      [],
-    );
+export const createOrUpdateUserRecord = async (user: INearbyUser) => {
+  await database.action(async () => {
+    const record = await nearbyPeopleCollection
+      .query(Q.where('uuid', user.uuid))
+      .fetch();
 
-    txn.executeSql(
-      `INSERT INTO ${TABLE_NAME} (uuid, distance) VALUES (:uuid, :distance)`,
-      [user.uuid, user.distance],
-    );
+    if (record.length === 1) {
+      // Ignore
+      // await record.update(person => {
+      //   person.uuid = user.uuid;
+      //   person.distance = user.distance;
+      // });
+    } else {
+      await nearbyPeopleCollection.create(person => {
+        person.uuid = user.uuid;
+        person.distance = user.distance;
+      });
+    }
   });
+  // db.transaction(function(txn: any) {
+  //   txn.executeSql(
+  //     `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
+  //       uuid VARCHAR(50) PRIMARY KEY NOT NULL, distance FLOAT(8) NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`,
+  //     [],
+  //   );
+
+  //   txn.executeSql(
+  //     `INSERT INTO ${TABLE_NAME} (uuid, distance) VALUES (:uuid, :distance)`,
+  //     [user.uuid, user.distance],
+  //   );
+  // });
 };
 
-export const getNearbyPeopleList = () => {
-  return new Promise((resolve, reject) => {
-    db.readTransaction(
-      function(t: any) {
-        t.executeSql(`SELECT * FROM ${TABLE_NAME}`, [], function(t, r) {
-          resolve(r.rows._array);
-        });
-      },
-      function(e: any) {
-        reject(e);
-      },
-    );
-  });
-};
-
-const testDB = () => {
-  db.transaction(function(txn: any) {
-    txn.executeSql(`SELECT * FROM ${TABLE_NAME}`, [], function(
-      tx: any,
-      res: any,
-    ) {
-      for (let i = 0; i < res.rows.length; ++i) {
-        console.log('item:', res.rows.item(i));
-      }
-    });
-  });
+export const getNearbyPeopleList = async () => {
+  const allUsers = await nearbyPeopleCollection.query().fetch();
+  return allUsers;
 };
 
 const dropTable = () => {
@@ -53,6 +48,10 @@ const dropTable = () => {
   });
 };
 
-setTimeout(() => {
-  // dropTable();
-}, 3000);
+// setTimeout(() => {
+//   // createOrUpdateUserRecord();
+// }, 2000);
+
+// setTimeout(() => {
+//   getNearbyPeopleList();
+// }, 2000);
