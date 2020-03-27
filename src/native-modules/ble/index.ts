@@ -1,21 +1,21 @@
-import {
-  NativeModules,
-  DeviceEventEmitter,
-  DeviceEventEmitterStatic,
-} from 'react-native';
+import {NativeModules, DeviceEventEmitter} from 'react-native';
 const UUID = 'CDB7950D-73F1-4D4D-8E47-C090502DBD63';
 
 type Events =
   | 'onScanResult'
+  | 'onScanResultBulk'
   | 'onScanFailed'
   | 'onBroadcastSuccess'
-  | 'onBroadcastFailure';
+  | 'onBroadcastFailure'
+  | 'onStopScanning'
+  | 'onStopBroadcast';
 
 interface IBLE {
   startBroadcast: () => void;
   stopBroadcast: () => void;
   startScanning: () => void;
   stopScanning: () => void;
+  getBLEState: () => void;
   addListener: (on: Events, callback: (e: any) => void) => any;
 }
 
@@ -23,13 +23,14 @@ const startScanning = () => {
   return NativeModules.Beacon.startScanning(UUID);
 };
 
+const startBroadcast = () => {
+  return NativeModules.Beacon.startBroadcast(UUID);
+};
+
 const stopScanning = () => {
   return NativeModules.Beacon.stopScanning();
 };
 
-const startBroadcast = () => {
-  return NativeModules.Beacon.startBroadcast(UUID);
-};
 const stopBroadcast = () => {
   return NativeModules.Beacon.stopBroadcast();
 };
@@ -43,7 +44,7 @@ export const BLE: IBLE = {
   ...NativeModules.Beacon,
   startBroadcast,
   startScanning,
+  addListener,
   stopScanning,
   stopBroadcast,
-  addListener,
 };

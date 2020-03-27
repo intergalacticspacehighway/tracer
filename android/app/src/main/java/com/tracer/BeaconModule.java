@@ -18,6 +18,9 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
@@ -42,7 +45,6 @@ public class BeaconModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void stopBroadcast() {
         Log.i("BLE","stopping broadcast");
-
         BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
         advertiser.stopAdvertising(advertisingCallback);
 
@@ -52,6 +54,7 @@ public class BeaconModule extends ReactContextBaseJavaModule {
     public void stopScanning() {
         BluetoothLeScanner mBluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
         mBluetoothLeScanner.stopScan(mScanCallback);
+
     }
 
     @ReactMethod
@@ -96,6 +99,7 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
         Log.i("BLE", "starting scanning");
 
+
         mBluetoothLeScanner.startScan(Collections.singletonList(filter), settings, mScanCallback);
     }
 
@@ -134,6 +138,23 @@ public class BeaconModule extends ReactContextBaseJavaModule {
     };
 
     ScanCallback mScanCallback = new ScanCallback() {
+
+        WritableMap getReadableMap(ScanResult result) {
+
+            String deviceId = result.getScanRecord().getServiceUuids().get(0).getUuid().toString();
+
+            WritableMap params = Arguments.createMap();
+            params.putString("deviceId", deviceId);
+            params.putInt("rssi", result.getRssi());
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                int txPower = result.getTxPower();
+                params.putInt("txPower", txPower);
+            }
+
+            return params;
+        }
+
         public void onScanResult(int callbackType, ScanResult result) {
             if (result == null || result.getDevice() == null){
                 return;
@@ -142,18 +163,10 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
             if(result.getScanRecord().getServiceUuids().get(0) != null){
 
-            String deviceId = result.getScanRecord().getServiceUuids().get(0).getUuid().toString();
             Log.i("BLE", "On ScaN Result " +result.getScanRecord().getServiceUuids().get(0) );
 //            System.out.println("Power " + result.getRssi()+" : "+ result.getScanRecord().getTxPowerLevel()+": "+result.getTxPower() );
 
-            WritableMap params = Arguments.createMap();
-            params.putString("deviceId", deviceId);
-            params.putInt("rssi", result.getRssi());
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    int txPower = result.getTxPower();
-                    params.putInt("txPower", txPower);
-                }
+              WritableMap  params = this.getReadableMap(result);
 
 
             ReactContext currentContext = getReactApplicationContext();
@@ -168,6 +181,19 @@ public class BeaconModule extends ReactContextBaseJavaModule {
         @Override
         public void onBatchScanResults(List<ScanResult> results) {
             Log.i("BLE", "Batch results "+results);
+            WritableArray params = Arguments.createArray();
+            for(ScanResult result : results) {
+                WritableMap map = this.getReadableMap(result);
+                params.pushMap(map);
+            }
+
+            ReactContext currentContext = getReactApplicationContext();
+
+            currentContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit("onScanResultBulk", params);
+
+
         }
 
         @Override
@@ -188,5 +214,7 @@ public class BeaconModule extends ReactContextBaseJavaModule {
     protected static double calculateAccuracy(int txPower, int rssi) {
         return Math.pow(10d, ((double) txPower - rssi) / (10 * 2));
     }
+
+
 
 }
