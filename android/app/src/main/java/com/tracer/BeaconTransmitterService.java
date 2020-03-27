@@ -33,6 +33,8 @@ public class BeaconTransmitterService extends Service {
         super.onCreate();
     }
 
+    private BeaconTransmitter beaconTransmitter;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String uuid = intent.getStringExtra("uuid");
@@ -53,7 +55,9 @@ public class BeaconTransmitterService extends Service {
 
         BeaconParser beaconParser = new BeaconParser()
                 .setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24");
-        BeaconTransmitter beaconTransmitter = new BeaconTransmitter(getApplicationContext(), beaconParser);
+
+        this.beaconTransmitter = new BeaconTransmitter(this, beaconParser);
+
         if(!beaconTransmitter.isStarted()){
         try {
             Log.i("BLE ",uuid);
@@ -63,15 +67,15 @@ public class BeaconTransmitterService extends Service {
                 Log.d("BLE", "Beacon Transmission supported");
 
                 Beacon beacon = new Beacon.Builder()
+                        .setManufacturer(0x4C00)
                         .setId1(uuid)
                         .setId2("1")
                         .setId3("2")
-                        .setManufacturer(76)
                         .setTxPower(-59)
                         .build();
 
-                beaconTransmitter.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED);
-                beaconTransmitter.startAdvertising(beacon, new AdvertiseCallback() {
+                this.beaconTransmitter.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED);
+                this.beaconTransmitter.startAdvertising(beacon, new AdvertiseCallback() {
 
                     @Override
                     public void onStartFailure(int errorCode) {
@@ -97,17 +101,15 @@ public class BeaconTransmitterService extends Service {
 //        stopSelf();
         return START_NOT_STICKY;
     }
+
     @Override
-    public void onDestroy() {
-        BeaconParser beaconParser = new BeaconParser()
-                .setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24");
-    Log.i("Destroy ","Service destroy");
-        BeaconTransmitter beaconTransmitter = new BeaconTransmitter(getApplicationContext(), beaconParser);
-        beaconTransmitter.stopAdvertising();
-        stopForeground(true);
+    public void onTaskRemoved(Intent rootIntent) {
+        this.beaconTransmitter.stopAdvertising();
+        this.beaconTransmitter = null;
         stopSelf();
-        super.onDestroy();
+        super.onTaskRemoved(rootIntent);
     }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

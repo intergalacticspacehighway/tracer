@@ -1,7 +1,7 @@
 import React from 'react';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {colors} from 'theme';
-import {Nearby} from 'components';
+import {Nearby, CovidTest} from 'components';
 import {History} from 'components';
 
 const Tab = createMaterialBottomTabNavigator();
@@ -15,6 +15,7 @@ export function BottomTabNavigator() {
       sceneAnimationEnabled={false}>
       <Tab.Screen name="Nearby" component={Nearby} />
       <Tab.Screen name="History" component={History} />
+      <Tab.Screen name="Risk Test" component={CovidTest} />
     </Tab.Navigator>
   );
 }

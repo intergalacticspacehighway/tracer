@@ -22,6 +22,9 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.BeaconTransmitter;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +32,7 @@ import java.util.UUID;
 
 public class BeaconModule extends ReactContextBaseJavaModule {
     private static final char[] HEX = "0123456789ABCDEF".toCharArray();
+    BeaconParser parser = new  BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24");
 
     //constructor
     public BeaconModule(ReactApplicationContext reactContext) {
@@ -142,23 +146,31 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
         WritableMap getReadableMap(ScanResult result) {
 
-            byte[] uuidBytes = Arrays.copyOfRange(result.getScanRecord().getBytes(), 6, 22);
-
-            String uuidWithoutDash = toHexString(uuidBytes);
-
-            String uuid = uuidWithoutDash.substring(0,8)+"-"+uuidWithoutDash.substring(8,12)+"-"+uuidWithoutDash.substring(12,16)+"-"+uuidWithoutDash.substring(16,20)+"-"+uuidWithoutDash.substring(20);
-//            String deviceId = result.getScanRecord().getServiceUuids().get(0).getUuid().toString();
-
             WritableMap params = Arguments.createMap();
-            params.putString("deviceId", uuid);
+
+            Beacon beacon = parser.fromScanData(result.getScanRecord().getBytes(), result.getRssi(), result.getDevice());
+            if(beacon != null) {
+
+            String deviceId = beacon.getIdentifier(0).toString();
+            double distance = beacon.getDistance();
+            Log.i("BLE", String.valueOf(distance) + " "+ deviceId);
+            params.putString("deviceId", deviceId);
             params.putInt("rssi", result.getRssi());
+
+            params.putDouble("distance", distance);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 int txPower = result.getTxPower();
                 params.putInt("txPower", txPower);
             }
 
+            } else {
+                Log.i("BLE", "beacon nil");
+
+            }
+
             return params;
+
         }
 
         public void onScanResult(int callbackType, ScanResult result) {
@@ -166,13 +178,6 @@ public class BeaconModule extends ReactContextBaseJavaModule {
                 return;
 
             }
-//            result.getAdvertisingSid();
-
-
-//            if(result.getScanRecord().getServiceUuids() != null && result.getScanRecord().getServiceUuids().get(0) != null){
-
-//            Log.i("BLE", "On ScaN Result " +result.getScanRecord().getServiceUuids().get(0) );
-//            System.out.println("Power " + result.getRssi()+" : "+ result.getScanRecord().getTxPowerLevel()+": "+result.getTxPower() );
 
               WritableMap  params = this.getReadableMap(result);
 
@@ -219,14 +224,5 @@ public class BeaconModule extends ReactContextBaseJavaModule {
         }
     };
 
-    static String toHexString(byte[] bytes) {
-        char[] chars = new char[bytes.length * 2];
-        for (int i = 0; i < bytes.length; i++) {
-            int c = bytes[i] & 0xFF;
-            chars[i * 2] = HEX[c >>> 4];
-            chars[i * 2 + 1] = HEX[c & 0x0F];
-        }
-        return new String(chars).toLowerCase();
-    }
 
 }
