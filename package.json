@@ -12,6 +12,7 @@
   "dependencies": {
     "@nozbe/watermelondb": "^0.16.0",
     "@nozbe/with-observables": "^1.0.5",
+    "@react-native-community/datetimepicker": "^2.3.0",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.7",
     "@react-navigation/material-bottom-tabs": "^5.1.6",
@@ -26,6 +27,7 @@
     "react-native-bluetooth-status": "^1.4.2",
     "react-native-device-info": "^5.5.3",
     "react-native-gesture-handler": "^1.6.1",
+    "react-native-modal-datetime-picker": "^8.5.1",
     "react-native-paper": "^3.6.0",
     "react-native-reanimated": "^1.7.1",
     "react-native-safe-area-context": "^0.7.3",

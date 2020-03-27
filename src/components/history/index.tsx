@@ -1,11 +1,13 @@
-import React, {useReducer, useEffect} from 'react';
-import {ActivityIndicator, Text} from 'react-native-paper';
+import React, {useReducer, useEffect, useState} from 'react';
+import {Text, Button} from 'react-native-paper';
 import {View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {INearbyUser} from 'types';
 import {useIsFocused} from '@react-navigation/native';
-import {getNearbyPeopleList} from '../../db/users';
+import {getNearbyPeopleList} from 'services';
 import {formatTimestamp} from 'utils';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {colors} from 'theme';
 
 const types = {
   loading: 'loading',
@@ -32,6 +34,54 @@ const reducer = (state: any, action: any) => {
   }
 };
 
+const Date = () => {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date: any) => {
+    console.warn('A date has been picked: ', date);
+    hideDatePicker();
+  };
+
+  return (
+    <View>
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          style={{
+            borderWidth: 1,
+            borderColor: colors['cool-blue-80'],
+          }}
+          onPress={showDatePicker}>
+          Start Date
+        </Button>
+        <Button
+          style={{
+            borderWidth: 1,
+            borderColor: colors['cool-blue-80'],
+          }}
+          onPress={showDatePicker}>
+          End Date
+        </Button>
+      </View>
+
+      <DateTimePickerModal
+        style={{backgroundColor: 'black'}}
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+    </View>
+  );
+};
+
 export function History() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const isFocused = useIsFocused();
@@ -50,7 +100,7 @@ export function History() {
       }
     }
     getData();
-  }, [isFocused]);
+  }, []);
 
   //   if (state.status === 'loading') {
   //     return <ActivityIndicator />;
@@ -66,6 +116,7 @@ export function History() {
   if (state.status === 'success') {
     return (
       <View>
+        <Date />
         <ScrollView>
           {state.data.map((user: INearbyUser) => {
             return (

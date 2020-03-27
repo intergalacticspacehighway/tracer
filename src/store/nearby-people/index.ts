@@ -1,6 +1,6 @@
 import create from 'zustand';
 import {INearbyUser} from 'types';
-import {createOrUpdateUserRecord} from '../../db/users';
+import {createOrUpdateUserRecord} from 'services';
 const throttle = require('lodash.throttle');
 
 const [useNearbyPeopleStore, api] = create(() => ({person: {} as INearbyUser}));

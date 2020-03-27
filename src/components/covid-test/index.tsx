@@ -13,6 +13,9 @@ export function CovidTest() {
   return (
     <WebView
       startInLoadingState={true}
+      allowsBackForwardNavigationGestures
+      originWhitelist={['*']}
+      allowsLinkPreview
       source={{uri: 'https://www.evital.in/risk-tests/covid-19/'}}
       renderLoading={Spinner}
     />
