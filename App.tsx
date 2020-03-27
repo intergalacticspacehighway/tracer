@@ -1,7 +1,6 @@
 import React from 'react';
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {Nearby} from './src/components/nearby';
 import {Provider as PaperProvider, Appbar} from 'react-native-paper';
 import {theme} from './src/theme';
 import {colors} from './src/theme/colors';
@@ -15,7 +14,6 @@ const App = () => {
       </Appbar.Header>
       <SafeAreaView>
         <StatusBar backgroundColor={colors['cool-blue-100']} />
-        {/* <Nearby /> */}
       </SafeAreaView>
       <NavigationContainer>
         <BottomTabNavigator />

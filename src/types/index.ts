@@ -3,6 +3,7 @@ export interface INearbyUser {
   location?: {lat: number; long: number};
   distance: number;
   createdAt?: any;
+  updatedAt?: any;
 }
 
 export interface IOnScanResult {

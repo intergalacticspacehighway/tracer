@@ -11,13 +11,14 @@ export const createOrUpdateUserRecord = async (user: INearbyUser) => {
       .fetch();
 
     if (record.length === 1) {
-      // Ignore
-      // await record.update(person => {
-      //   person.uuid = user.uuid;
-      //   person.distance = user.distance;
-      // });
+      const docRef = await nearbyPeopleCollection.find(record[0].id);
+
+      await docRef.update((person: any) => {
+        person.uuid = user.uuid;
+        person.distance = user.distance;
+      });
     } else {
-      await nearbyPeopleCollection.create(person => {
+      await nearbyPeopleCollection.create((person: any) => {
         person.uuid = user.uuid;
         person.distance = user.distance;
       });

@@ -39,6 +39,20 @@ public class BeaconModule extends ReactContextBaseJavaModule {
     }
 
 
+    @ReactMethod
+    public void stopBroadcast() {
+        Log.i("BLE","stopping broadcast");
+
+        BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
+        advertiser.stopAdvertising(advertisingCallback);
+
+    }
+
+    @ReactMethod
+    public void stopScanning() {
+        BluetoothLeScanner mBluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
+        mBluetoothLeScanner.stopScan(mScanCallback);
+    }
 
     @ReactMethod
     public void startBroadcast(final String uuid) {

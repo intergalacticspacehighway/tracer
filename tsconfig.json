@@ -19,7 +19,8 @@
       "store": ["./src/store"],
       "types": ["./src/types"],
       "utils": ["./src/utils"],
-      "theme": ["./src/theme"]
+      "theme": ["./src/theme"],
+      "ble": ["./src/native-modules/ble"]
     }
   },
   "exclude": [

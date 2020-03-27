@@ -13,6 +13,7 @@ module.exports = {
           types: './src/types',
           utils: './src/utils',
           theme: './src/theme',
+          ble: './src/native-modules/ble',
         },
       },
     ],

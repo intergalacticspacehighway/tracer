@@ -74,7 +74,7 @@ export function History() {
                 <Text>Distance: {user.distance} m</Text>
                 <Text>
                   Created at :{'     '}
-                  {formatTimestamp(user.createdAt)}
+                  {formatTimestamp(user.updatedAt)}
                 </Text>
               </View>
             );
