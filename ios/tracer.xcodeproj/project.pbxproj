@@ -27,6 +27,13 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = tracer;
 		};
+		4F588767242DC63F0096624E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7410CB8974DB489A97AB44A5 /* WatermelonDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6E660D5E213BCCD300189354;
+			remoteInfo = WatermelonDB;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +49,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = tracer/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = tracer/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = tracer/main.m; sourceTree = "<group>"; };
-		22232A705E4941A3B7F42B5E /* libWatermelonDB.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = archive.ar; name = libWatermelonDB.a; path = libWatermelonDB.a; sourceTree = "<group>"; };
+		22232A705E4941A3B7F42B5E /* libWatermelonDB.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libWatermelonDB.a; sourceTree = "<group>"; };
 		258D6CB56EE71029EFD1AB09 /* Pods-tracer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracer.debug.xcconfig"; path = "Target Support Files/Pods-tracer/Pods-tracer.debug.xcconfig"; sourceTree = "<group>"; };
 		327D92C0B352FF8AA12BB257 /* Pods-tracerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracerTests.release.xcconfig"; path = "Target Support Files/Pods-tracerTests/Pods-tracerTests.release.xcconfig"; sourceTree = "<group>"; };
 		32E62ADD0EBD5840F4D05E86 /* libPods-tracerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tracerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -54,7 +61,7 @@
 		59961A63454A1A5D358AD587 /* libPods-tracer-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tracer-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B9D67D0DCCE807591BC111F /* libPods-tracer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tracer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		674ADD8E07D808380F7EBACD /* Pods-tracer-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracer-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-tracer-tvOS/Pods-tracer-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		7410CB8974DB489A97AB44A5 /* WatermelonDB.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = WatermelonDB.xcodeproj; path = "../node_modules/@nozbe/watermelondb/native/ios/WatermelonDB.xcodeproj"; sourceTree = "<group>"; };
+		7410CB8974DB489A97AB44A5 /* WatermelonDB.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = WatermelonDB.xcodeproj; path = "../node_modules/@nozbe/watermelondb/native/ios/WatermelonDB.xcodeproj"; sourceTree = "<group>"; };
 		77FA89320B8108C67DC29EB3 /* Pods-tracer-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracer-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-tracer-tvOSTests/Pods-tracer-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B2A2113F4E3E39C4DD87AFBE /* Pods-tracer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracer.release.xcconfig"; path = "Target Support Files/Pods-tracer/Pods-tracer.release.xcconfig"; sourceTree = "<group>"; };
 		D2B9EC177682D88739A14B2F /* Pods-tracer-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracer-tvOS.release.xcconfig"; path = "Target Support Files/Pods-tracer-tvOS/Pods-tracer-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -133,8 +140,17 @@
 		4F214887242C734E003EAB1A /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
+				22232A705E4941A3B7F42B5E /* libWatermelonDB.a */,
 			);
 			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		4F588764242DC63F0096624E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4F588768242DC63F0096624E /* libWatermelonDB.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -260,6 +276,12 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4F588764242DC63F0096624E /* Products */;
+					ProjectRef = 7410CB8974DB489A97AB44A5 /* WatermelonDB.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* tracer */,
@@ -267,6 +289,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		4F588768242DC63F0096624E /* libWatermelonDB.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libWatermelonDB.a;
+			remoteRef = 4F588767242DC63F0096624E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {

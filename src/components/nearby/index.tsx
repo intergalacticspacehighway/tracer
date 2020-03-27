@@ -11,6 +11,7 @@ import {useBluetoothStatus} from 'react-native-bluetooth-status';
 
 const DISTANCE_THRESHOLD = 4;
 const insertRecord = (e: IOnScanResult) => {
+  console.log('on scan result ', e);
   const distance = getDistance(e.rssi, e.txPower);
   let user = {
     uuid: e.deviceId,
@@ -52,16 +53,6 @@ function Nearby() {
   const [btStatus, isPending] = useBluetoothStatus();
 
   useEffect(() => {
-    if (!btStatus && !isPending) {
-      enableBluetooth();
-    }
-    if (btStatus) {
-      BLE.startBroadcast();
-      BLE.startScanning();
-    }
-  }, [btStatus, isPending]);
-
-  useEffect(() => {
     scanListener.current = BLE.addListener('onScanResult', insertRecord);
 
     bulkScanListener.current = BLE.addListener(
@@ -71,11 +62,19 @@ function Nearby() {
       },
     );
 
+    if (!btStatus && !isPending) {
+      enableBluetooth();
+    }
+
+    if (btStatus) {
+      BLE.startBroadcast();
+      BLE.startScanning();
+    }
     return () => {
       scanListener.current.remove();
       bulkScanListener.current.remove();
     };
-  }, []);
+  }, [btStatus, isPending]);
 
   return (
     <View>

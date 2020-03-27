@@ -1,4 +1,9 @@
-import {NativeModules, DeviceEventEmitter} from 'react-native';
+import {
+  NativeModules,
+  DeviceEventEmitter,
+  NativeEventEmitter,
+  Platform,
+} from 'react-native';
 const UUID = 'CDB7950D-73F1-4D4D-8E47-C090502DBD63';
 
 type Events =
@@ -9,6 +14,11 @@ type Events =
   | 'onBroadcastFailure'
   | 'onStopScanning'
   | 'onStopBroadcast';
+
+const emitter =
+  Platform.OS !== 'android'
+    ? new NativeEventEmitter(NativeModules.Beacon)
+    : DeviceEventEmitter;
 
 interface IBLE {
   startBroadcast: () => void;
@@ -36,7 +46,7 @@ const stopBroadcast = () => {
 };
 
 const addListener = (on: Events, callback: (e: any) => void) => {
-  const a = DeviceEventEmitter.addListener(on, callback);
+  const a = emitter.addListener(on, callback);
   return a;
 };
 

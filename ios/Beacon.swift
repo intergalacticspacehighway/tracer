@@ -14,7 +14,7 @@ import UIKit
 
 
 @objc(Beacon)
-class Beacon: NSObject, CBPeripheralManagerDelegate,CBCentralManagerDelegate
+class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDelegate
 {
   
   
@@ -25,7 +25,7 @@ class Beacon: NSObject, CBPeripheralManagerDelegate,CBCentralManagerDelegate
     var manager: CBCentralManager? = nil
   
   @objc
-  static func requiresMainQueueSetup() -> Bool {
+  override static func requiresMainQueueSetup() -> Bool {
     return true
   }
   
@@ -37,15 +37,15 @@ class Beacon: NSObject, CBPeripheralManagerDelegate,CBCentralManagerDelegate
     manager = CBCentralManager(delegate: self, queue: nil)
     
 
-    
-    
-    
-    
+
+
+
+
     if localBeacon != nil {
         stopBroadcast()
     }
 
-    let localBeaconUUID = "5A4BCFCE-174E-4BAC-A814-092E77F6B7E5"
+    let localBeaconUUID = "CDB7950D-73F1-4D4D-8E47-C090502DBD63"
     let localBeaconMajor: CLBeaconMajorValue = 123
     let localBeaconMinor: CLBeaconMinorValue = 456
 
@@ -92,6 +92,10 @@ class Beacon: NSObject, CBPeripheralManagerDelegate,CBCentralManagerDelegate
         print(RSSI)
         print(advertisementData)
         
+        sendEvent(withName: "onScanResult", body: [
+          "rssi":RSSI,
+          "deviceId":peripheral.identifier
+          ])
       }
     
       
@@ -120,4 +124,18 @@ class Beacon: NSObject, CBPeripheralManagerDelegate,CBCentralManagerDelegate
           }
       print("uuid ", uuid)
    }
+
+  @objc(supportedEvents)
+  override public func supportedEvents() -> [String] {
+      return [
+          "onScanResult",
+          "onScanResultBulk",
+          "onScanFailed",
+          "onBroadcastSuccess",
+          "onBroadcastFailure",
+          "onStopScanning",
+          "onStopBroadcast"
+          
+               ]
+  }
 }
