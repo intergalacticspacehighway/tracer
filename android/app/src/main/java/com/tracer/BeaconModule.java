@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.ParcelUuid;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -28,6 +29,7 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.BeaconTransmitter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
 
 public class BeaconModule extends ReactContextBaseJavaModule {
@@ -52,6 +54,11 @@ public class BeaconModule extends ReactContextBaseJavaModule {
         Intent serviceIntent = new Intent(getReactApplicationContext(), BeaconTransmitterService.class);
 
         getReactApplicationContext().stopService(serviceIntent);
+        String text = "Stopping Broadcast";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(getReactApplicationContext(), text, duration);
+        toast.show();
+
 
 
     }
@@ -60,6 +67,11 @@ public class BeaconModule extends ReactContextBaseJavaModule {
     public void stopScanning() {
         BluetoothLeScanner mBluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
         mBluetoothLeScanner.stopScan(mScanCallback);
+        String text = "Scanning has been stopped";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(getReactApplicationContext(), text, duration);
+        toast.show();
+
 
     }
 
@@ -87,10 +99,13 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
         @ReactMethod
     public void startScanning(final String uuid) {
+                String text = "Scanning for Nearby";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getReactApplicationContext(), text, duration);
+                toast.show();
 
 
-
-        BluetoothLeScanner mBluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
+            BluetoothLeScanner mBluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
 //        ScanFilter filter = new ScanFilter.Builder()
 //                .setServiceUuid(new ParcelUuid(UUID.fromString(uuid)))
 //                .build();
@@ -211,6 +226,20 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
         @Override
         public void onScanFailed(int errorCode) {
+            if(errorCode == ScanCallback.SCAN_FAILED_ALREADY_STARTED) {
+                String text = "Scan is already in progress";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getReactApplicationContext(), text, duration);
+                toast.show();
+
+            } else if(errorCode == ScanCallback.SCAN_FAILED_FEATURE_UNSUPPORTED) {
+                String text = "Scan BLE emitters is not supported by this device";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getReactApplicationContext(), text, duration);
+                toast.show();
+
+            }
+
 
             WritableMap params = Arguments.createMap();
             params.putInt("error", errorCode);

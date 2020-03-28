@@ -40,7 +40,7 @@ const App = () => {
       <SafeAreaView>
         <StatusBar backgroundColor={colors['cool-blue-100']} />
       </SafeAreaView>
-      {user ? (
+      {user.uuid ? (
         <>
           <CustomDrawerContent />
 

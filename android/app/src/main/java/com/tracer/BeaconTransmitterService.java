@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -58,12 +59,15 @@ public class BeaconTransmitterService extends Service {
 
         this.beaconTransmitter = new BeaconTransmitter(this, beaconParser);
 
-        if(!beaconTransmitter.isStarted()){
+        if (this.beaconTransmitter.isStarted()) {
+            this.beaconTransmitter.stopAdvertising();
+        }
+
         try {
-            Log.i("BLE ",uuid);
+            Log.i("BLE ", uuid);
             ParcelUuid pUuid = new ParcelUuid(UUID.fromString(uuid));
             int result = BeaconTransmitter.checkTransmissionSupported(getApplicationContext());
-            if(result == BeaconTransmitter.SUPPORTED) {
+            if (result == BeaconTransmitter.SUPPORTED) {
                 Log.d("BLE", "Beacon Transmission supported");
 
                 Beacon beacon = new Beacon.Builder()
@@ -79,21 +83,38 @@ public class BeaconTransmitterService extends Service {
 
                     @Override
                     public void onStartFailure(int errorCode) {
-                        Log.e("BLE", "Advertisement start failed with code: "+errorCode);
+                        Log.e("BLE", "Advertisement start failed with code: " + errorCode);
+                        String text = "Broadcasting Failed with error code " + errorCode;
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+                        toast.show();
                     }
 
                     @Override
                     public void onStartSuccess(AdvertiseSettings settingsInEffect) {
                         Log.i("BLE", "Advertisement start succeeded.");
+                        String text = "Broadcasting";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+                        toast.show();
                     }
                 });
+            } else {
+                String text = "This device doesn't support BLE signal broadcast";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+                toast.show();
             }
 
         } catch (Exception e) {
-            Log.i("BLE",e.getMessage());
+            Log.i("BLE", e.getMessage());
+            String text = e.getMessage();
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+            toast.show();
             e.printStackTrace();
         }
-        }
+
 
 
 
@@ -105,9 +126,32 @@ public class BeaconTransmitterService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         this.beaconTransmitter.stopAdvertising();
+        String text = "Stopping stopped";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+        toast.show();
+
         this.beaconTransmitter = null;
         stopSelf();
+
+
         super.onTaskRemoved(rootIntent);
+    }
+
+    @Override
+    public void onDestroy() {
+        if(this.beaconTransmitter != null) {
+            this.beaconTransmitter.stopAdvertising();
+            String text = "Stopping Broadcast";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+            toast.show();
+
+            this.beaconTransmitter = null;
+        }
+
+
+        super.onDestroy();
     }
 
     @Nullable
