@@ -68,14 +68,13 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <StatusBar backgroundColor={colors['cool-blue-100']} />
-      {console.log('user man ', user)}
       {user.uuid ? (
         <SideMenu
           isOpen={isMenuOpen}
           menu={<CustomDrawerContent handleClose={closeMenu} />}>
           <Appbar.Header>
             <Appbar.Action onPress={toggleMenu} icon="menu"></Appbar.Action>
-            <Appbar.Content title="Fight Covid-19"></Appbar.Content>
+            <Appbar.Content title="eFight Covid-19"></Appbar.Content>
           </Appbar.Header>
           <NavigationContainer>
             <BottomTabNavigator />

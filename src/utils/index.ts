@@ -36,12 +36,14 @@ export function getDistance(rssi: number, txPower: number = 59) {
   if (rssi === 0) {
     return -1.0;
   }
+  const distance = Math.pow(10, (59 - Math.abs(rssi)) / 20);
+  console.log('distance ', distance);
+  return distance;
 
-  const ratio = (rssi * 1.0) / txPower;
-  if (ratio < 1.0) {
-    return Math.pow(ratio, 10);
-  } else {
-    const accuracy = 0.89976 * Math.pow(ratio, 7.7095) + 0.111;
-    return accuracy;
-  }
+  // const ratio = (rssi * 1.0) / txPower;
+  // if (ratio < 1.0) {
+  //   return Math.pow(ratio, 10);
+  // } else {
+  //   const accuracy = 0.89976 * Math.pow(ratio, 7.7095) + 0.111;
+  //   return accuracy;
 }

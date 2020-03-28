@@ -7,19 +7,22 @@ import {BLE} from 'ble';
 import {useRecentDetectionsStore, addNearbyUser} from 'store';
 import {Text, Appbar} from 'react-native-paper';
 import {getDistance} from 'utils';
-import {IOnScanResult} from 'types';
+import {IOnScanResult, IUser, INearbyUser} from 'types';
 //@ts-ignore
 import {useBluetoothStatus} from 'react-native-bluetooth-status';
 import {colors} from 'theme';
 import {UserCard} from '../user-card';
+import {useUserStore} from 'services';
 
 const DISTANCE_THRESHOLD = 4;
 const insertRecord = (e: IOnScanResult) => {
   console.log('on scan result ', e);
   const distance = getDistance(e.rssi, e.txPower);
-  let user = {
+  let user: INearbyUser = {
     uuid: e.deviceId,
     distance: Number(distance.toPrecision(4)),
+    updatedAt: new Date(),
+    createdAt: new Date(),
   };
   console.log('onScanResult', e, distance);
   if (distance <= DISTANCE_THRESHOLD) {
@@ -49,8 +52,9 @@ async function enableBluetooth() {
 }
 
 function Nearby() {
-  const detections = useRecentDetectionsStore(state => state.detections);
+  const {detections} = useRecentDetectionsStore();
   const [isScaning, setIsScanning] = useState(false);
+  const {user} = useUserStore();
 
   let scanListener = useRef({remove: () => {}});
   let bulkScanListener = useRef({remove: () => {}});
@@ -91,6 +95,9 @@ function Nearby() {
   return (
     <>
       <View style={styles.container}>
+        <View>
+          <Text>Your id: {user.uuid.substr(24, 12)}</Text>
+        </View>
         {isScaning ? (
           <Button style={styles.scanButton} onPress={stopEmitting}>
             Stop
@@ -103,7 +110,7 @@ function Nearby() {
         <ScrollView style={{width: '100%'}}>
           <View>
             {detections.map(user => {
-              return <UserCard item={user} />;
+              return <UserCard item={user} key={user.uuid} />;
             })}
           </View>
         </ScrollView>

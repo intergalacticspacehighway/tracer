@@ -10,7 +10,7 @@ const [useRecentDetectionsStore, api] = create(() => ({
 const addNearbyUser = throttle(
   (user: INearbyUser) => {
     createOrUpdateUserRecord(user);
-    let detections = api.getState().detections;
+    let detections = [...api.getState().detections];
 
     if (detections.length === 4) {
       detections.pop();
@@ -18,8 +18,11 @@ const addNearbyUser = throttle(
 
     const index = detections.findIndex(person => person.uuid === user.uuid);
     if (index === -1) {
-      detections.unshift({...user, updatedAt: new Date()});
-      api.setState(() => ({detections: [...detections]}));
+      detections.unshift(user);
+      api.setState(() => ({detections}));
+    } else {
+      detections[index] = user;
+      api.setState(() => ({detections}));
     }
   },
   2000,

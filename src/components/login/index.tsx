@@ -16,8 +16,7 @@ import CountryPicker, {
 } from 'react-native-country-picker-modal';
 import {colors} from 'theme';
 import {firebaseAuth} from 'firebase';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
-import {Button} from 'react-native-paper';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 
 const api = () => {};
 const MAX_LENGTH_CODE = 6;
@@ -184,49 +183,54 @@ export class Login extends Component<any, IState> {
       : {};
 
     return (
-      <View style={styles.container}>
-        <Text style={styles.header}>{headerText}</Text>
+      <KeyboardAwareScrollView>
+        <View style={styles.container}>
+          <Text style={styles.header}>{headerText}</Text>
 
-        <View style={styles.form}>
-          <View style={{alignItems: 'center', marginBottom: 20}}>
-            {this._renderCountryPicker()}
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity onPress={this.toggleCountryPicker}>
-              {this._renderCallingCode()}
+          <View style={styles.form}>
+            <View style={{alignItems: 'center', marginBottom: 20}}>
+              {this._renderCountryPicker()}
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity onPress={this.toggleCountryPicker}>
+                {this._renderCallingCode()}
+              </TouchableOpacity>
+
+              <TextInput
+                ref={'textInput'}
+                name={this.state.enterCode ? 'code' : 'textInputValue'}
+                type={'TextInput'}
+                underlineColorAndroid={'transparent'}
+                autoCapitalize={'none'}
+                autoCorrect={false}
+                onChangeText={this._onChangeText}
+                placeholder={this.state.enterCode ? 'OTP' : 'Phone Number'}
+                keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
+                style={[styles.textInput, textStyle]}
+                returnKeyType="go"
+                autoFocus
+                placeholderTextColor={brandColor}
+                selectionColor={brandColor}
+                maxLength={this.state.enterCode ? 6 : 20}
+                onSubmitEditing={this._getSubmitAction}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this._getSubmitAction}>
+              <Text style={styles.buttonText}>{buttonText}</Text>
             </TouchableOpacity>
 
-            <TextInput
-              ref={'textInput'}
-              name={this.state.enterCode ? 'code' : 'textInputValue'}
-              type={'TextInput'}
-              underlineColorAndroid={'transparent'}
-              autoCapitalize={'none'}
-              autoCorrect={false}
-              onChangeText={this._onChangeText}
-              placeholder={this.state.enterCode ? 'OTP' : 'Phone Number'}
-              keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
-              style={[styles.textInput, textStyle]}
-              returnKeyType="go"
-              autoFocus
-              placeholderTextColor={brandColor}
-              selectionColor={brandColor}
-              maxLength={this.state.enterCode ? 6 : 20}
-              onSubmitEditing={this._getSubmitAction}
-            />
+            {this._renderFooter()}
           </View>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={this._getSubmitAction}>
-            <Text style={styles.buttonText}>{buttonText}</Text>
-          </TouchableOpacity>
-
-          {this._renderFooter()}
+          <Spinner
+            color={colors['cool-blue-80']}
+            visible={this.state.spinner}
+          />
         </View>
-
-        <Spinner color={colors['cool-blue-80']} visible={this.state.spinner} />
-      </View>
+      </KeyboardAwareScrollView>
     );
   }
 }

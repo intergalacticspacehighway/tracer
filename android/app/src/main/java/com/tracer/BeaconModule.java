@@ -77,6 +77,10 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void startBroadcast(final String uuid) {
+        boolean isBluetoothEnabled = verifyIfBluetoothIsEnabled();
+        if(!isBluetoothEnabled) {
+            return;
+        }
 
         try {
             Log.i("BLE ",uuid);
@@ -97,8 +101,35 @@ public class BeaconModule extends ReactContextBaseJavaModule {
     }
 
 
+        boolean verifyIfBluetoothIsEnabled() {
+            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (mBluetoothAdapter == null) {
+                String text = "Device does not support bluetooth";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getReactApplicationContext(), text, duration);
+                toast.show();
+                return false;
+            }
+
+            if (!mBluetoothAdapter.isEnabled()) {
+                String text = "Please enable Bluetooth and try again";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getReactApplicationContext(), text, duration);
+                toast.show();
+                return false;
+            }
+
+            return true;
+    }
+
         @ReactMethod
     public void startScanning(final String uuid) {
+
+                boolean isBluetoothEnabled = verifyIfBluetoothIsEnabled();
+                if(!isBluetoothEnabled) {
+                    return;
+                }
+
                 String text = "Scanning for Nearby";
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(getReactApplicationContext(), text, duration);
