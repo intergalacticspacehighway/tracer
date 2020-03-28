@@ -1,3 +1,5 @@
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+
 export interface INearbyUser {
   uuid: string;
   location?: {lat: number; long: number};
@@ -12,6 +14,6 @@ export interface IOnScanResult {
   deviceId: string;
 }
 
-export interface IUser {
+export interface IUser extends FirebaseAuthTypes.User {
   uuid: string;
 }

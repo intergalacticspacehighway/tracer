@@ -4,7 +4,8 @@ import {
   NativeEventEmitter,
   Platform,
 } from 'react-native';
-const UUID = 'CDB7950D-73F1-4D4D-8E47-C090502DBD63';
+import {getCurrentUserUUID} from 'services';
+export const UUID = '848da4e8-0793-5813-8a36-63d7888353f7';
 
 type Events =
   | 'onScanResult'
@@ -34,7 +35,8 @@ const startScanning = () => {
 };
 
 const startBroadcast = () => {
-  return NativeModules.Beacon.startBroadcast(UUID);
+  const userUUID = getCurrentUserUUID();
+  return NativeModules.Beacon.startBroadcast(userUUID);
 };
 
 const stopScanning = () => {

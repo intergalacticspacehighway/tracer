@@ -19,7 +19,7 @@ const App = () => {
       const _user: FirebaseAuthTypes.User = user._user;
       // console.log("user ", _user);
       try {
-        createUserRecord({uuid: 'hey bro'});
+        createUserRecord(_user);
       } catch (e) {}
     } else {
       //@ts-ignore
@@ -40,7 +40,7 @@ const App = () => {
       <SafeAreaView>
         <StatusBar backgroundColor={colors['cool-blue-100']} />
       </SafeAreaView>
-      {user.uuid ? (
+      {user ? (
         <>
           <CustomDrawerContent />
 
