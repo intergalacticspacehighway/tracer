@@ -14,7 +14,6 @@ module.exports = {
           utils: './src/utils',
           theme: './src/theme',
           ble: './src/native-modules/ble',
-          firebase: './src/firebase',
         },
       },
     ],

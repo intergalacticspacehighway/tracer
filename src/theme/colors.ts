@@ -11,7 +11,6 @@ export const colors = {
   'cool-grey-700': '#3E4C59',
   'cool-grey-800': '#323F4B',
   'cool-grey-900': '#1F2933',
-  'red-vivid-800': '#8A041A',
   'cool-blue-80': '#008dc9',
   'cool-blue-100': '#1565c0',
 };

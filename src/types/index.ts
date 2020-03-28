@@ -11,7 +11,3 @@ export interface IOnScanResult {
   rssi: number;
   deviceId: string;
 }
-
-export interface IUser {
-  uuid: string;
-}

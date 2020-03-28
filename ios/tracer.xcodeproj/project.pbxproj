@@ -15,7 +15,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		4F21488F242C7471003EAB1A /* Beacon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F21488E242C7471003EAB1A /* Beacon.swift */; };
 		4F214891242C74CE003EAB1A /* Beacon.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F214890242C74CE003EAB1A /* Beacon.m */; };
-		4FC7A61E242ED9640093148B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4FC7A61C242ED9640093148B /* GoogleService-Info.plist */; };
 		7C9993DD42C342EC8201ED16 /* libWatermelonDB.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22232A705E4941A3B7F42B5E /* libWatermelonDB.a */; };
 		C3553107B9BF39314654F921 /* libPods-tracerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E62ADD0EBD5840F4D05E86 /* libPods-tracerTests.a */; };
 /* End PBXBuildFile section */
@@ -58,7 +57,6 @@
 		4F21488D242C7470003EAB1A /* tracer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tracer-Bridging-Header.h"; sourceTree = "<group>"; };
 		4F21488E242C7471003EAB1A /* Beacon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beacon.swift; sourceTree = "<group>"; };
 		4F214890242C74CE003EAB1A /* Beacon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Beacon.m; sourceTree = "<group>"; };
-		4FC7A61C242ED9640093148B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../android/app/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		512796F731A6328A7E2CBBF4 /* Pods-tracerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tracerTests.debug.xcconfig"; path = "Target Support Files/Pods-tracerTests/Pods-tracerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		59961A63454A1A5D358AD587 /* libPods-tracer-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tracer-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B9D67D0DCCE807591BC111F /* libPods-tracer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tracer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,7 +114,6 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				4FC7A61C242ED9640093148B /* GoogleService-Info.plist */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -317,7 +314,6 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				4FC7A61E242ED9640093148B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
