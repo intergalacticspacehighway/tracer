@@ -7,8 +7,8 @@ export const theme = {
   roundness: 6,
   colors: {
     ...DefaultTheme.colors,
-    primary: colors['cool-blue-100'],
-    accent: colors['cool-blue-80'],
+    primary: colors['cool-blue-80'],
+    accent: colors['cool-blue-100'],
     text: 'black',
     disabled: color(colors['cool-grey-300'])
       .alpha(0.26)

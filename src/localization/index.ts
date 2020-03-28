@@ -19,7 +19,7 @@ i18n.use(initReactI18next).init({
     },
     hi: {
       translation: {
-        nearby: 'તમારા નજીકમાં',
+        nearby: 'आपके पास',
         history: 'अतीत',
         riskTest: 'कोरोना जाँच',
       },

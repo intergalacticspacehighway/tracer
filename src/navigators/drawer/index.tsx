@@ -16,26 +16,33 @@ export function CustomDrawerContent(props: any) {
         active={false}
         onPress={logout}
       />
-      <Drawer.Section>
-        <Drawer.Item
-          label={'English'}
-          active={i18n.language === 'en'}
-          onPress={() => {
-            i18n.changeLanguage('en');
-            AsyncStorage.setItem('defaultLang', 'en');
-            props.handleClose();
-          }}
-        />
-        <Drawer.Item
-          label={'ગુજરાતી'}
-          active={i18n.language === 'gu'}
-          onPress={() => {
-            i18n.changeLanguage('gu');
-            AsyncStorage.setItem('defaultLang', 'gu');
-            props.handleClose();
-          }}
-        />
-      </Drawer.Section>
+      <Drawer.Item
+        label={'English'}
+        active={i18n.language === 'en'}
+        onPress={() => {
+          i18n.changeLanguage('en');
+          AsyncStorage.setItem('defaultLang', 'en');
+          props.handleClose();
+        }}
+      />
+      <Drawer.Item
+        label={'ગુજરાતી'}
+        active={i18n.language === 'gu'}
+        onPress={() => {
+          i18n.changeLanguage('gu');
+          AsyncStorage.setItem('defaultLang', 'gu');
+          props.handleClose();
+        }}
+      />
+      <Drawer.Item
+        label={'हिन्दी'}
+        active={i18n.language === 'hi'}
+        onPress={() => {
+          i18n.changeLanguage('hi');
+          AsyncStorage.setItem('defaultLang', 'hi');
+          props.handleClose();
+        }}
+      />
     </Drawer.Section>
   );
 }

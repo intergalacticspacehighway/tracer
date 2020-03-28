@@ -28,7 +28,7 @@ const App = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const user = useUserStore(state => state.user);
+  const {user} = useUserStore();
 
   function onAuthStateChanged(user: any) {
     if (user) {
@@ -68,6 +68,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <StatusBar backgroundColor={colors['cool-blue-100']} />
+      {console.log('user man ', user)}
       {user.uuid ? (
         <SideMenu
           isOpen={isMenuOpen}

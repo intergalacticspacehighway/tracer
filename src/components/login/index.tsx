@@ -10,9 +10,14 @@ import {
 } from 'react-native';
 //@ts-ignore
 import Spinner from 'react-native-loading-spinner-overlay';
-import CountryPicker, {Country} from 'react-native-country-picker-modal';
+import CountryPicker, {
+  Country,
+  FlagButton,
+} from 'react-native-country-picker-modal';
 import {colors} from 'theme';
 import {firebaseAuth} from 'firebase';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
+import {Button} from 'react-native-paper';
 
 const api = () => {};
 const MAX_LENGTH_CODE = 6;
@@ -66,7 +71,7 @@ export class Login extends Component<any, IState> {
       this.confirmation = await firebaseAuth.signInWithPhoneNumber(phoneWithCC);
       this.setState({enterCode: true});
     } catch (e) {
-      Alert.alert('Something went wrong');
+      Alert.alert('Something went wrong', e.message);
       console.log('Error ', e);
     } finally {
       this.setState({spinner: false});
@@ -121,6 +126,10 @@ export class Login extends Component<any, IState> {
     );
   };
 
+  toggleCountryPicker = () => {
+    this.setState({showCountryPicker: !this.state.showCountryPicker});
+  };
+
   _renderCountryPicker = () => {
     if (this.state.enterCode) return <View />;
 
@@ -128,6 +137,9 @@ export class Login extends Component<any, IState> {
       <CountryPicker
         ref={'countryPicker'}
         closeable
+        placeholder=""
+        visible={this.state.showCountryPicker}
+        onClose={this.toggleCountryPicker}
         style={styles.countryPicker}
         onChange={this._changeCountry}
         cca2={this.state.country.cca2}
@@ -145,16 +157,20 @@ export class Login extends Component<any, IState> {
 
     return (
       <View style={styles.callingCodeView}>
-        <Text style={styles.callingCodeText}>
-          +{this.state.country.callingCode}
-        </Text>
+        <FlagButton
+          countryCode={this.state.country.cca2}
+          onOpen={this.toggleCountryPicker}
+          withCallingCodeButton
+        />
       </View>
     );
   };
 
   render() {
     let headerText = `${
-      this.state.enterCode ? 'verification code' : 'Enter your Phone number'
+      this.state.enterCode
+        ? 'Enter verification code'
+        : 'Enter your Phone number'
     }`;
     let buttonText = this.state.enterCode
       ? 'Verify confirmation code'
@@ -163,8 +179,6 @@ export class Login extends Component<any, IState> {
       ? {
           height: 50,
           textAlign: 'center',
-          fontSize: 40,
-          fontWeight: 'bold',
           fontFamily: 'Courier',
         }
       : {};
@@ -178,7 +192,9 @@ export class Login extends Component<any, IState> {
             {this._renderCountryPicker()}
           </View>
           <View style={{flexDirection: 'row'}}>
-            {this._renderCallingCode()}
+            <TouchableOpacity onPress={this.toggleCountryPicker}>
+              {this._renderCallingCode()}
+            </TouchableOpacity>
 
             <TextInput
               ref={'textInput'}
@@ -188,9 +204,7 @@ export class Login extends Component<any, IState> {
               autoCapitalize={'none'}
               autoCorrect={false}
               onChangeText={this._onChangeText}
-              placeholder={
-                this.state.enterCode ? '_ _ _ _ _ _' : 'Phone Number'
-              }
+              placeholder={this.state.enterCode ? 'OTP' : 'Phone Number'}
               keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
               style={[styles.textInput, textStyle]}
               returnKeyType="go"
@@ -269,6 +283,7 @@ const styles = StyleSheet.create({
   callingCodeView: {
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 10,
   },
   callingCodeText: {
     fontSize: 20,
@@ -276,5 +291,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica',
     fontWeight: 'bold',
     paddingRight: 10,
+  },
+  underlineStyleBase: {
+    width: 30,
+    height: 45,
+    color: colors['cool-blue-100'],
+    borderWidth: 0,
+    borderColor: colors['cool-black-80'],
+    borderBottomWidth: 1,
+  },
+
+  underlineStyleHighLighted: {
+    borderColor: colors['cool-blue-100'],
   },
 });

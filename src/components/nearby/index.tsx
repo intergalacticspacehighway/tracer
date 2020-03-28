@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     width: 200,
     borderWidth: 6,
     elevation: 10,
-    borderColor: colors['cool-blue-100'],
+    borderColor: colors['cool-blue-80'],
     backgroundColor: 'white',
     marginTop: 30,
     justifyContent: 'center',
