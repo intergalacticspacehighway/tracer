@@ -10,7 +10,6 @@ const [useUserStore, api] = create(set => ({
   user: {} as IUser,
 }));
 
-console.log('get uuid ', getUuid('helloworld'));
 export const createUserRecord = async (user: FirebaseAuthTypes.User) => {
   let userUUID = UUID.substr(0, 24);
   userUUID += getUuid(user.uid).substr(24, 12);
@@ -25,11 +24,6 @@ export const createUserRecord = async (user: FirebaseAuthTypes.User) => {
 export const logout = async () => {
   api.setState(() => ({user: {}}));
   firebaseAuth.signOut();
-};
-
-export const getUserUUID = async () => {
-  const uuid = await AsyncStorage.getItem('uuid');
-  return uuid;
 };
 
 export const getCurrentUserUUID = () => {

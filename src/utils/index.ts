@@ -5,6 +5,10 @@ export const formatTimestamp = (timestamp: number) => {
   return format(new Date(timestamp), 'do MMM yyyy KK:mm aaaa');
 };
 
+export const formatDate = (timestamp: number) => {
+  return format(new Date(timestamp), 'do MMM yyyy');
+};
+
 export const permissionMiddleWare = async () => {
   if (Platform.OS === 'ios') {
     return true;

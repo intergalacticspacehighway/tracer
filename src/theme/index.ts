@@ -9,7 +9,7 @@ export const theme = {
     ...DefaultTheme.colors,
     primary: colors['cool-blue-100'],
     accent: colors['cool-blue-80'],
-    text: colors['cool-black-100'],
+    text: 'black',
     disabled: color(colors['cool-grey-300'])
       .alpha(0.26)
       .rgb()

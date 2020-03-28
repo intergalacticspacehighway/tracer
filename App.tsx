@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {SafeAreaView, StatusBar, StyleSheet, AsyncStorage} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider as PaperProvider, Appbar} from 'react-native-paper';
 import {theme} from './src/theme';
@@ -8,10 +8,26 @@ import {Login} from 'components';
 import {BottomTabNavigator} from 'navigators';
 import {firebaseAuth} from 'firebase';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import {createUserRecord, getUserUUID, useUserStore} from 'services';
+import {createUserRecord, useUserStore} from 'services';
+import Drawer from 'react-native-drawer';
 import {CustomDrawerContent} from './src/navigators/drawer';
+import SideMenu from 'react-native-side-menu';
+import {useTranslation} from 'react-i18next';
+import './src/localization';
 
 const App = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const {i18n} = useTranslation();
+  const [defaultLangLoaded, setDefaultLangLoaded] = useState(false);
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const user = useUserStore(state => state.user);
 
   function onAuthStateChanged(user: any) {
@@ -32,22 +48,38 @@ const App = () => {
     return subscriber;
   }, []);
 
+  useEffect(() => {
+    AsyncStorage.getItem('defaultLang')
+      .then(res => {
+        if (res) {
+          i18n.changeLanguage(res);
+        }
+        setDefaultLangLoaded(true);
+      })
+      .catch((e: any) => {
+        setDefaultLangLoaded(true);
+      });
+  }, [i18n, setDefaultLangLoaded]);
+
+  if (!defaultLangLoaded) {
+    return null;
+  }
+
   return (
     <PaperProvider theme={theme}>
-      <Appbar.Header>
-        <Appbar.Action onPress={() => {}} icon="arrow-left" />
-      </Appbar.Header>
-      <SafeAreaView>
-        <StatusBar backgroundColor={colors['cool-blue-100']} />
-      </SafeAreaView>
+      <StatusBar backgroundColor={colors['cool-blue-100']} />
       {user.uuid ? (
-        <>
-          <CustomDrawerContent />
-
+        <SideMenu
+          isOpen={isMenuOpen}
+          menu={<CustomDrawerContent handleClose={closeMenu} />}>
+          <Appbar.Header>
+            <Appbar.Action onPress={toggleMenu} icon="menu"></Appbar.Action>
+            <Appbar.Content title="Fight Covid-19"></Appbar.Content>
+          </Appbar.Header>
           <NavigationContainer>
             <BottomTabNavigator />
           </NavigationContainer>
-        </>
+        </SideMenu>
       ) : (
         <Login />
       )}

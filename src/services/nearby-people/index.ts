@@ -38,8 +38,20 @@ export const createOrUpdateUserRecord = async (user: INearbyUser) => {
   // });
 };
 
-export const getNearbyPeopleList = async () => {
-  const allUsers = await nearbyPeopleCollection.query().fetch();
+export const getNearbyPeopleList = async ({
+  start,
+  end,
+}: {
+  start: Date;
+  end: Date;
+}) => {
+  const allUsers = await nearbyPeopleCollection
+    .query(
+      Q.where('updated_at', Q.gte(start.getTime())),
+      Q.and(Q.where('updated_at', Q.lte(end.getTime()))),
+    )
+    .fetch();
+
   return allUsers;
 };
 

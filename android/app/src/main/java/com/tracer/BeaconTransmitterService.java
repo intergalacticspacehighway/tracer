@@ -45,8 +45,8 @@ public class BeaconTransmitterService extends Service {
                 0, notificationIntent, 0);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
         Notification notification = mBuilder
-                .setContentTitle("Foreground Service")
-                .setContentText(uuid)
+                .setContentTitle("Broadcasting signal")
+                .setContentText("Broadcasting will run in background")
                 .setSmallIcon(R.drawable.redbox_top_border_background)
                 .setContentIntent(pendingIntent)
                 .build();

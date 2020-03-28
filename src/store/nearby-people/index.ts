@@ -3,17 +3,27 @@ import {INearbyUser} from 'types';
 import {createOrUpdateUserRecord} from 'services';
 const throttle = require('lodash.throttle');
 
-const [useNearbyPeopleStore, api] = create(() => ({person: {} as INearbyUser}));
+const [useRecentDetectionsStore, api] = create(() => ({
+  detections: [] as INearbyUser[],
+}));
 
 const addNearbyUser = throttle(
   (user: INearbyUser) => {
-    api.setState(() => ({
-      person: user,
-    }));
     createOrUpdateUserRecord(user);
+    let detections = api.getState().detections;
+
+    if (detections.length === 4) {
+      detections.pop();
+    }
+
+    const index = detections.findIndex(person => person.uuid === user.uuid);
+    if (index === -1) {
+      detections.unshift({...user, updatedAt: new Date()});
+      api.setState(() => ({detections: [...detections]}));
+    }
   },
   2000,
   {trailing: false},
 );
 
-export {useNearbyPeopleStore, addNearbyUser};
+export {useRecentDetectionsStore, addNearbyUser};

@@ -1,6 +1,6 @@
 import React from 'react';
 import {WebView} from 'react-native-webview';
-import {ActivityIndicator} from 'react-native-paper';
+import {ActivityIndicator, Appbar} from 'react-native-paper';
 
 const Spinner = () => (
   <ActivityIndicator
@@ -11,13 +11,15 @@ const Spinner = () => (
 
 export function CovidTest() {
   return (
-    <WebView
-      startInLoadingState={true}
-      allowsBackForwardNavigationGestures
-      originWhitelist={['*']}
-      allowsLinkPreview
-      source={{uri: 'https://www.evital.in/risk-tests/covid-19/'}}
-      renderLoading={Spinner}
-    />
+    <>
+      <WebView
+        startInLoadingState={true}
+        allowsBackForwardNavigationGestures
+        originWhitelist={['*']}
+        allowsLinkPreview
+        source={{uri: 'https://www.evital.in/risk-tests/covid-19/mobile/'}}
+        renderLoading={Spinner}
+      />
+    </>
   );
 }

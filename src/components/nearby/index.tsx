@@ -1,13 +1,17 @@
-import React, {useEffect, useRef} from 'react';
-import {View, ScrollView, Button, Alert, Linking, Platform} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {View, ScrollView, Alert, Platform, StyleSheet} from 'react-native';
+import {Button} from 'react-native-paper';
 //@ts-ignore
 import {BluetoothStatus} from 'react-native-bluetooth-status';
 import {BLE} from 'ble';
-import {useNearbyPeopleStore, addNearbyUser} from 'store';
-import {Text} from 'react-native-paper';
-import {formatTimestamp, getDistance} from 'utils';
-import {IOnScanResult, INearbyUser} from 'types';
+import {useRecentDetectionsStore, addNearbyUser} from 'store';
+import {Text, Appbar} from 'react-native-paper';
+import {getDistance} from 'utils';
+import {IOnScanResult} from 'types';
+//@ts-ignore
 import {useBluetoothStatus} from 'react-native-bluetooth-status';
+import {colors} from 'theme';
+import {UserCard} from '../user-card';
 
 const DISTANCE_THRESHOLD = 4;
 const insertRecord = (e: IOnScanResult) => {
@@ -45,10 +49,10 @@ async function enableBluetooth() {
 }
 
 function Nearby() {
-  const detectedPerson = useNearbyPeopleStore(state => state.person);
+  const detections = useRecentDetectionsStore(state => state.detections);
+  const [isScaning, setIsScanning] = useState(false);
 
   let scanListener = useRef({remove: () => {}});
-  let scanStopListener = useRef({remove: () => {}});
   let bulkScanListener = useRef({remove: () => {}});
   const [btStatus, isPending] = useBluetoothStatus();
 
@@ -66,43 +70,72 @@ function Nearby() {
       enableBluetooth();
     }
 
-    if (btStatus) {
-      // BLE.startBroadcast();
-      // BLE.startScanning();
-    }
     return () => {
       scanListener.current.remove();
       bulkScanListener.current.remove();
     };
   }, [btStatus, isPending]);
 
+  const startEmittingAndReceiving = () => {
+    setIsScanning(true);
+    BLE.startBroadcast();
+    BLE.startScanning();
+  };
+
+  const stopEmitting = () => {
+    setIsScanning(false);
+    BLE.stopBroadcast();
+    BLE.stopScanning();
+  };
+
   return (
-    <View>
-      <Button onPress={BLE.startBroadcast} title="Broadcast"></Button>
-      <Button onPress={BLE.stopBroadcast} title="Stop broadcast"></Button>
-
-      <Button onPress={BLE.startScanning} title="Scan"></Button>
-      <Button onPress={BLE.stopScanning} title="Stop Scan"></Button>
-
-      <ScrollView>
-        {detectedPerson.uuid ? (
-          <>
-            <Text>{detectedPerson.uuid}</Text>
-            <Text>Distance:{detectedPerson.distance}</Text>
-            <Text>Distance:{formatTimestamp(new Date().getTime())}</Text>
-          </>
-        ) : null}
-        {/* {Object.keys(people).map(uuid => {
-          return (
-            <View key={uuid}>
-              <Text>{uuid}</Text>
-              <Text>{formatTimestamp(people[uuid].timestamp)}</Text>
-            </View>
-          );
-        })} */}
-      </ScrollView>
-    </View>
+    <>
+      <View style={styles.container}>
+        {isScaning ? (
+          <Button style={styles.scanButton} onPress={stopEmitting}>
+            Stop
+          </Button>
+        ) : (
+          <Button style={styles.scanButton} onPress={startEmittingAndReceiving}>
+            Scan
+          </Button>
+        )}
+        <ScrollView style={{width: '100%'}}>
+          <View>
+            {detections.map(user => {
+              return <UserCard item={user} />;
+            })}
+          </View>
+        </ScrollView>
+      </View>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  scanButton: {
+    borderRadius: 100,
+    height: 200,
+    width: 200,
+    borderWidth: 6,
+    elevation: 10,
+    borderColor: colors['cool-blue-100'],
+    backgroundColor: 'white',
+    marginTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+  },
+  textStyle: {
+    fontSize: 16,
+    color: colors['cool-black-100'],
+    margin: 20,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export {Nearby};
