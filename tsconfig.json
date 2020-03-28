@@ -20,7 +20,8 @@
       "types": ["./src/types"],
       "utils": ["./src/utils"],
       "theme": ["./src/theme"],
-      "ble": ["./src/native-modules/ble"]
+      "ble": ["./src/native-modules/ble"],
+      "firebase": ["./src/firebase"]
     }
   },
   "exclude": [
