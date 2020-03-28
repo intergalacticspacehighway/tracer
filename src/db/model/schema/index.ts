@@ -14,5 +14,9 @@ export const schema = appSchema({
         {name: 'updated_at', type: 'number'},
       ],
     }),
+    tableSchema({
+      name: 'user',
+      columns: [{name: 'uuid', type: 'string', isIndexed: true}],
+    }),
   ],
 });
