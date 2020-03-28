@@ -37,22 +37,19 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
     manager = CBCentralManager(delegate: self, queue: nil)
     
 
-
-
-
-
     if localBeacon != nil {
         stopBroadcast()
     }
 
-    let localBeaconUUID = "CDB7950D-73F1-4D4D-8E47-C090502DBD63"
+    let localBeaconUUID = uuid
     let localBeaconMajor: CLBeaconMajorValue = 123
     let localBeaconMinor: CLBeaconMinorValue = 456
 
     let uuid = UUID(uuidString: localBeaconUUID)!
     localBeacon = CLBeaconRegion(proximityUUID: uuid, major: localBeaconMajor, minor: localBeaconMinor, identifier: "abcd")
-
-    beaconPeripheralData = localBeacon.peripheralData(withMeasuredPower: nil)
+    
+    beaconPeripheralData = localBeacon.peripheralData(withMeasuredPower: -59)
+    
     peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
     print("uuid ", uuid)
   }
@@ -64,10 +61,19 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
       beaconPeripheralData = nil
       localBeacon = nil
   }
+  
+  
+  @objc
+  func stopScanning() {
+    manager?.stopScan();
+      
+  }
 
   func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
       if peripheral.state == .poweredOn {
+        if !peripheralManager.isAdvertising {
           peripheralManager.startAdvertising(beaconPeripheralData as? [String: Any])
+        }
       } else if peripheral.state == .poweredOff {
           peripheralManager.stopAdvertising()
       }
@@ -91,20 +97,25 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
         print(peripheral.state)
         print(RSSI)
         print(advertisementData)
-        if let serviceUUIDs = advertisementData["kCBAdvDataServiceUUIDs"] as? NSArray
+     
+     if let dta = advertisementData["kCBAdvDataManufacturerData"] as? Data
         {
-          if serviceUUIDs.count > 0
-          {
-            ///
-              sendEvent(withName: "onScanResult", body: [
-              "rssi":RSSI,
-              "deviceId":serviceUUIDs[0]
-                
-              ])
-          }
+          print(dta.hexEncodedString())
+          let data = dta.hexEncodedString();
+//          let uuid = data.substring(with: Range.)(from: 8 , to:40);
+          let uuid = data[8..<40];
           
+         
+          print("receiving uuid ", uuid);
+//          let uuid = 004c0215848da4e8079358138a36a57ac46486e800010002c5
+          sendEvent(withName: "onScanResult", body:
+          [
+            
+              "rssi":RSSI,
+              "deviceId":uuid
+            
+          ])
         }
-        
         
         
       }
@@ -130,9 +141,9 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
   {
     manager?.scanForPeripherals(withServices: nil, options: nil)
 
-          DispatchQueue.main.asyncAfter(deadline: .now() + 60.0) {
-              self.stopScanForBLEDevice()
-          }
+//          DispatchQueue.main.asyncAfter(deadline: .now() + 60.0) {
+//              self.stopScanForBLEDevice()
+//          }
       print("uuid ", uuid)
    }
 
@@ -149,4 +160,38 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
           
                ]
   }
+}
+
+extension Data {
+    struct HexEncodingOptions: OptionSet {
+        let rawValue: Int
+        static let upperCase = HexEncodingOptions(rawValue: 1 << 0)
+    }
+
+    func hexEncodedString(options: HexEncodingOptions = []) -> String {
+        let format = options.contains(.upperCase) ? "%02hhX" : "%02hhx"
+        var finalArr = map { String(format: format, $0) }
+      
+//      if finalArr.count > 19
+//      {
+//        finalArr = finalArr.dropLast(5)
+//      }
+      
+      
+        return finalArr.joined()
+    }
+}
+
+extension String {
+    subscript(_ range: CountableRange<Int>) -> String {
+        let start = index(startIndex, offsetBy: max(0, range.lowerBound))
+        let end = index(start, offsetBy: min(self.count - range.lowerBound,
+                                             range.upperBound - range.lowerBound))
+        return String(self[start..<end])
+    }
+
+    subscript(_ range: CountablePartialRangeFrom<Int>) -> String {
+        let start = index(startIndex, offsetBy: max(0, range.lowerBound))
+         return String(self[start...])
+    }
 }

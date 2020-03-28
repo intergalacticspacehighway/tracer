@@ -25,7 +25,7 @@ const addNearbyUser = throttle(
       api.setState(() => ({detections}));
     }
   },
-  2000,
+  1000,
   {trailing: false},
 );
 

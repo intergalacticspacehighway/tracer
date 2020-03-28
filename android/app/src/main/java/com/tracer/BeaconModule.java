@@ -190,25 +190,22 @@ public class BeaconModule extends ReactContextBaseJavaModule {
 
     ScanCallback mScanCallback = new ScanCallback() {
 
-        WritableMap getReadableMap(ScanResult result) {
+        WritableMap getReadableMap(Beacon beacon) {
 
             WritableMap params = Arguments.createMap();
 
-            Beacon beacon = parser.fromScanData(result.getScanRecord().getBytes(), result.getRssi(), result.getDevice());
             if(beacon != null) {
 
             String deviceId = beacon.getIdentifier(0).toString();
             double distance = beacon.getDistance();
             Log.i("BLE", String.valueOf(distance) + " "+ deviceId);
             params.putString("deviceId", deviceId);
-            params.putInt("rssi", result.getRssi());
+            params.putInt("rssi", beacon.getRssi());
 
             params.putDouble("distance", distance);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                int txPower = result.getTxPower();
+                int txPower = beacon.getTxPower();
                 params.putInt("txPower", txPower);
-            }
 
             } else {
                 Log.i("BLE", "beacon nil");
@@ -222,10 +219,15 @@ public class BeaconModule extends ReactContextBaseJavaModule {
         public void onScanResult(int callbackType, ScanResult result) {
             if (result == null || result.getDevice() == null){
                 return;
-
             }
 
-              WritableMap  params = this.getReadableMap(result);
+            Beacon beacon = parser.fromScanData(result.getScanRecord().getBytes(), result.getRssi(), result.getDevice());
+
+            if(beacon == null) {
+                return;
+            }
+
+            WritableMap  params = this.getReadableMap(beacon);
 
 
             ReactContext currentContext = getReactApplicationContext();
@@ -242,8 +244,11 @@ public class BeaconModule extends ReactContextBaseJavaModule {
             Log.i("BLE", "Batch results "+results);
             WritableArray params = Arguments.createArray();
             for(ScanResult result : results) {
-                WritableMap map = this.getReadableMap(result);
-                params.pushMap(map);
+                Beacon beacon = parser.fromScanData(result.getScanRecord().getBytes(), result.getRssi(), result.getDevice());
+                if(beacon != null) {
+                    WritableMap map = this.getReadableMap(beacon);
+                    params.pushMap(map);
+                }
             }
 
             ReactContext currentContext = getReactApplicationContext();
