@@ -9,7 +9,7 @@ export function CustomDrawerContent(props: any) {
   const {i18n} = useTranslation();
 
   return (
-    <Drawer.Section title="Fight Covid-19" style={styles.appTitle}>
+    <Drawer.Section title="eFight" style={styles.appTitle}>
       <Drawer.Item
         icon="account-arrow-right-outline"
         label={'Logout'}
