@@ -7,7 +7,7 @@ i18n.use(initReactI18next).init({
       translation: {
         nearby: 'Nearby',
         history: 'History',
-        riskTest: 'Covid eCheck',
+        riskTest: 'Covid e-Check',
         startTracking: 'Start Tracking',
         stopTracking: 'Stop Tracking',
       },

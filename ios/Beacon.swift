@@ -91,8 +91,7 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
   //CBCentralMaganerDelegate code
   func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
     
-    if (!peripherals.contains(peripheral))
-    {
+   
       peripherals.append(peripheral)
       print(peripheral.state)
       print(RSSI)
@@ -118,7 +117,7 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
       }
       
       
-    }
+    
     
   }
   

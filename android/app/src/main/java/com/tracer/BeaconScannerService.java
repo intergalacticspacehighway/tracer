@@ -60,7 +60,7 @@ public class BeaconScannerService extends Service {
                 .build();
         startForeground(2, notification);
 
-
+        
         mBluetoothLeScanner.startScan(mScanCallback);
 
 
