@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>890626600176-h3rpad39tus6unh3tnn4ib64j9bci7c4.apps.googleusercontent.com</string>
+	<string>890626600176-qu6alim8hh2u9r9lamimhlvtpp3h66e2.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.890626600176-h3rpad39tus6unh3tnn4ib64j9bci7c4</string>
+	<string>com.googleusercontent.apps.890626600176-qu6alim8hh2u9r9lamimhlvtpp3h66e2</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>890626600176-kgpnjb5fldalvf3j4luh7favnekafbps.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.tracer</string>
+	<string>com.eFight</string>
 	<key>PROJECT_ID</key>
 	<string>opportune-epoch-272119</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:890626600176:ios:cff1fb4e0135bd7bf86635</string>
+	<string>1:890626600176:ios:906ef3cddb2824b5f86635</string>
 	<key>DATABASE_URL</key>
 	<string>https://opportune-epoch-272119.firebaseio.com</string>
 </dict>

@@ -106,14 +106,7 @@ export class Login extends Component<any, IState> {
   };
 
   _renderFooter = () => {
-    if (this.state.enterCode)
-      return (
-        <View>
-          <Text style={styles.wrongNumberText} onPress={this._tryAgain}>
-            Enter the wrong number or need a new code?
-          </Text>
-        </View>
-      );
+    if (this.state.enterCode) return null;
 
     return (
       <View>
@@ -195,25 +188,49 @@ export class Login extends Component<any, IState> {
               <TouchableOpacity onPress={this.toggleCountryPicker}>
                 {this._renderCallingCode()}
               </TouchableOpacity>
-
-              <TextInput
-                ref={'textInput'}
-                name={this.state.enterCode ? 'code' : 'textInputValue'}
-                type={'TextInput'}
-                underlineColorAndroid={'transparent'}
-                autoCapitalize={'none'}
-                autoCorrect={false}
-                onChangeText={this._onChangeText}
-                placeholder={this.state.enterCode ? 'OTP' : 'Phone Number'}
-                keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
-                style={[styles.textInput, textStyle]}
-                returnKeyType="go"
-                autoFocus
-                placeholderTextColor={brandColor}
-                selectionColor={brandColor}
-                maxLength={this.state.enterCode ? 6 : 20}
-                onSubmitEditing={this._getSubmitAction}
-              />
+              {this.state.enterCode ? (
+                <TextInput
+                  name={this.state.enterCode ? 'code' : 'textInputValue'}
+                  key="phone"
+                  type={'TextInput'}
+                  underlineColorAndroid={'transparent'}
+                  autoCapitalize={'none'}
+                  autoCorrect={false}
+                  onChangeText={this._onChangeText}
+                  placeholder={this.state.enterCode ? 'OTP' : 'Phone Number'}
+                  keyboardType={
+                    Platform.OS === 'ios' ? 'number-pad' : 'numeric'
+                  }
+                  style={[styles.textInput, textStyle]}
+                  returnKeyType="go"
+                  autoFocus
+                  placeholderTextColor={brandColor}
+                  selectionColor={brandColor}
+                  maxLength={this.state.enterCode ? 6 : 20}
+                  onSubmitEditing={this._getSubmitAction}
+                />
+              ) : (
+                <TextInput
+                  key="otp"
+                  name={this.state.enterCode ? 'code' : 'textInputValue'}
+                  type={'TextInput'}
+                  underlineColorAndroid={'transparent'}
+                  autoCapitalize={'none'}
+                  autoCorrect={false}
+                  onChangeText={this._onChangeText}
+                  placeholder={this.state.enterCode ? 'OTP' : 'Phone Number'}
+                  keyboardType={
+                    Platform.OS === 'ios' ? 'number-pad' : 'numeric'
+                  }
+                  style={[styles.textInput, textStyle]}
+                  returnKeyType="go"
+                  autoFocus
+                  placeholderTextColor={brandColor}
+                  selectionColor={brandColor}
+                  maxLength={this.state.enterCode ? 6 : 20}
+                  onSubmitEditing={this._getSubmitAction}
+                />
+              )}
             </View>
 
             <TouchableOpacity

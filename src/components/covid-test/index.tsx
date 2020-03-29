@@ -18,8 +18,7 @@ export function CovidTest() {
         originWhitelist={['*']}
         allowsLinkPreview
         source={{
-          uri:
-            'https://www.evital.in/risk-tests/covid-19/mobile?showProvideInformationForm=false',
+          uri: 'https://www.evital.in/risk-tests/covid-19/mobile/',
         }}
         renderLoading={Spinner}
       />
