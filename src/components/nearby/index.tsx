@@ -41,7 +41,9 @@ const insertRecord = (e: IOnScanResult) => {
     createdAt: new Date(),
   };
 
-  addNearbyUser(user);
+  if (distance <= 5) {
+    addNearbyUser(user);
+  }
 };
 
 async function enableBluetooth() {
