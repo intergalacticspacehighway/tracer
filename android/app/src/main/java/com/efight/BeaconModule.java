@@ -1,4 +1,4 @@
-package com.tracer;
+package com.efight;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;

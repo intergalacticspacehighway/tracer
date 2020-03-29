@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:890626600176:android:4a888933d7dc8b05f86635",
+        "mobilesdk_app_id": "1:890626600176:android:d2d6437eb1e88b77f86635",
         "android_client_info": {
-          "package_name": "com.tracer"
+          "package_name": "com.efight"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "890626600176-3jvfi2i1v649859k9g9rppkkgj5u9mh8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.efight",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
         {
           "client_id": "890626600176-numaqr8ag0svgbq75h459ldhvum9hgc5.apps.googleusercontent.com",
           "client_type": 3
@@ -32,10 +40,56 @@
               "client_type": 3
             },
             {
-              "client_id": "890626600176-h3rpad39tus6unh3tnn4ib64j9bci7c4.apps.googleusercontent.com",
+              "client_id": "890626600176-qu6alim8hh2u9r9lamimhlvtpp3h66e2.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.tracer"
+                "bundle_id": "com.eFight",
+                "app_store_id": "1505166210"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890626600176:android:4a888933d7dc8b05f86635",
+        "android_client_info": {
+          "package_name": "com.tracer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890626600176-kgpnjb5fldalvf3j4luh7favnekafbps.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tracer",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "890626600176-numaqr8ag0svgbq75h459ldhvum9hgc5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR0fINSu8-62WxVPeoYwg553fgLBCepek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890626600176-numaqr8ag0svgbq75h459ldhvum9hgc5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "890626600176-qu6alim8hh2u9r9lamimhlvtpp3h66e2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eFight",
+                "app_store_id": "1505166210"
               }
             }
           ]

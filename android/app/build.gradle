@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.tracer"
+        applicationId "com.efight"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

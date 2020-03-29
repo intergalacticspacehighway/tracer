@@ -1,4 +1,4 @@
-package com.tracer;
+package com.efight;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

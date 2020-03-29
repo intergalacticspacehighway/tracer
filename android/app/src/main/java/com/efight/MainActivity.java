@@ -1,4 +1,4 @@
-package com.tracer;
+package com.efight;
 
 import android.content.Intent;
 import android.util.Log;
