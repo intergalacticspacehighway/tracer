@@ -10,6 +10,7 @@ i18n.use(initReactI18next).init({
         riskTest: 'Covid e-Check',
         startTracking: 'Start Tracking',
         stopTracking: 'Stop Tracking',
+        shareThisApp: 'Share this app',
       },
     },
     gu: {
@@ -19,6 +20,7 @@ i18n.use(initReactI18next).init({
         riskTest: 'કોરોના e-તપાસ',
         startTracking: 'નજીકમાં શોધ કરો',
         stopTracking: 'શોધવાનું બંધ કરો',
+        shareThisApp: 'આ એપ્લિકેશન શેર કરો',
       },
     },
     hi: {
@@ -28,6 +30,7 @@ i18n.use(initReactI18next).init({
         riskTest: 'कोरोना e-जाँच',
         startTracking: 'खोज शुरू करो',
         stopTracking: 'खोज बंद करो',
+        shareThisApp: 'इस एप को शेयर कीजिए',
       },
     },
   },
