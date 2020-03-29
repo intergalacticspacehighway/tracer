@@ -1,4 +1,5 @@
 package com.tracer;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -6,7 +7,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseSettings;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
@@ -17,18 +17,22 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactNativeHost;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.BeaconTransmitter;
-import org.altbeacon.beacon.Identifier;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 public class BeaconTransmitterService extends Service {
-    public static final String CHANNEL_ID = "ForegroundServiceChannel";
+    public static final String CHANNEL_ID = "BeaconTransmitterServiceChannel";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -85,7 +89,7 @@ public class BeaconTransmitterService extends Service {
                     public void onStartFailure(int errorCode) {
                         Log.e("BLE", "Advertisement start failed with code: " + errorCode);
                         String text = "Broadcasting Failed with error code " + errorCode;
-                        int duration = Toast.LENGTH_SHORT;
+                        int duration = Toast.LENGTH_LONG;
                         Toast toast = Toast.makeText(getApplicationContext(), text, duration);
                         toast.show();
                     }
@@ -93,15 +97,23 @@ public class BeaconTransmitterService extends Service {
                     @Override
                     public void onStartSuccess(AdvertiseSettings settingsInEffect) {
                         Log.i("BLE", "Advertisement start succeeded.");
-                        String text = "Broadcasting";
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast toast = Toast.makeText(getApplicationContext(), text, duration);
-                        toast.show();
+
+
+                        WritableMap params = Arguments.createMap();
+
+
+                        params.putString("status", "success");
+
+                        ReactContext currentContext = getReactApplicationContext();
+                        currentContext
+                                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                .emit("onBroadcastSuccess", params);
+
                     }
                 });
             } else {
                 String text = "This device doesn't support BLE signal broadcast";
-                int duration = Toast.LENGTH_SHORT;
+                int duration = Toast.LENGTH_LONG;
                 Toast toast = Toast.makeText(getApplicationContext(), text, duration);
                 toast.show();
             }
@@ -109,24 +121,32 @@ public class BeaconTransmitterService extends Service {
         } catch (Exception e) {
             Log.i("BLE", e.getMessage());
             String text = e.getMessage();
-            int duration = Toast.LENGTH_SHORT;
+            int duration = Toast.LENGTH_LONG;
             Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
             e.printStackTrace();
         }
-
-
-
 
         //do heavy work on a background thread
 //        stopSelf();
         return START_NOT_STICKY;
     }
 
+
+    ReactContext getReactApplicationContext() {
+        MainApplication application = (MainApplication) this.getApplication();
+
+        ReactNativeHost reactNativeHost = application.getReactNativeHost();
+        ReactInstanceManager reactInstanceManager = reactNativeHost.getReactInstanceManager();
+        ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
+
+        return reactContext;
+    }
+
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         this.beaconTransmitter.stopAdvertising();
-        String text = "Stopping stopped";
+        String text = "Stopping broadcast";
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(getApplicationContext(), text, duration);
         toast.show();
@@ -140,7 +160,7 @@ public class BeaconTransmitterService extends Service {
 
     @Override
     public void onDestroy() {
-        if(this.beaconTransmitter != null) {
+        if (this.beaconTransmitter != null) {
             this.beaconTransmitter.stopAdvertising();
             String text = "Stopping Broadcast";
             int duration = Toast.LENGTH_SHORT;
@@ -159,6 +179,7 @@ public class BeaconTransmitterService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(

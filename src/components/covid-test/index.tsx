@@ -17,7 +17,10 @@ export function CovidTest() {
         allowsBackForwardNavigationGestures
         originWhitelist={['*']}
         allowsLinkPreview
-        source={{uri: 'https://www.evital.in/risk-tests/covid-19/mobile/'}}
+        source={{
+          uri:
+            'https://www.evital.in/risk-tests/covid-19/mobile?showProvideInformationForm=false',
+        }}
         renderLoading={Spinner}
       />
     </>

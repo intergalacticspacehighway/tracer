@@ -71,6 +71,8 @@ function Nearby() {
 
   let scanListener = useRef({remove: () => {}});
   let bulkScanListener = useRef({remove: () => {}});
+  let emitterSuccessListener = useRef({remove: () => {}});
+
   const [btStatus, isPending] = useBluetoothStatus();
 
   useEffect(() => {
@@ -80,6 +82,13 @@ function Nearby() {
       'onScanResultBulk',
       (e: IOnScanResult[]) => {
         e.forEach(insertRecord);
+      },
+    );
+
+    emitterSuccessListener.current = BLE.addListener(
+      'onBroadcastSuccess',
+      () => {
+        setIsScanning(true);
       },
     );
 
@@ -94,7 +103,6 @@ function Nearby() {
   }, [btStatus, isPending]);
 
   const startEmittingAndReceiving = () => {
-    setIsScanning(true);
     BLE.startBroadcast();
     BLE.startScanning();
   };

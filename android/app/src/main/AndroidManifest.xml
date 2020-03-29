@@ -20,6 +20,11 @@
             android:enabled="true"
             android:exported="true"></service>
 
+        <service
+            android:name=".BeaconScannerService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
             android:value="AIzaSyCR0fINSu8-62WxVPeoYwg553fgLBCepek" />
