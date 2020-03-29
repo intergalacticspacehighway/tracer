@@ -51,7 +51,7 @@ public class BeaconTransmitterService extends Service {
         Notification notification = mBuilder
                 .setContentTitle("Broadcasting signal")
                 .setContentText("Broadcasting will run in background")
-                .setSmallIcon(R.drawable.redbox_top_border_background)
+                .setSmallIcon(R.drawable.notification)
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(1, notification);

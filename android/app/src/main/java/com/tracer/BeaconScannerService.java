@@ -55,7 +55,7 @@ public class BeaconScannerService extends Service {
         Notification notification = mBuilder
                 .setContentTitle("Scanning nearby emitters")
                 .setContentText("Scanning will run in background")
-                .setSmallIcon(R.drawable.redbox_top_border_background)
+                .setSmallIcon(R.drawable.notification)
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(2, notification);
