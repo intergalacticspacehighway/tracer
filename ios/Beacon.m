@@ -12,5 +12,6 @@ RCT_EXTERN_METHOD(startBroadcast:(NSString *)uuid)
 RCT_EXTERN_METHOD(startScanning:(NSString *)uuid)
 RCT_EXTERN_METHOD(stopScanning)
 RCT_EXTERN_METHOD(stopBroadcast)
+RCT_EXTERN_METHOD(detectBeacons)
 
 @end

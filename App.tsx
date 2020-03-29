@@ -74,7 +74,7 @@ const App = () => {
           menu={<CustomDrawerContent handleClose={closeMenu} />}>
           <Appbar.Header>
             <Appbar.Action onPress={toggleMenu} icon="menu"></Appbar.Action>
-            <Appbar.Content title="eFight Covid-19"></Appbar.Content>
+            <Appbar.Content title="eFight"></Appbar.Content>
           </Appbar.Header>
           <NavigationContainer>
             <BottomTabNavigator />

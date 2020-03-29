@@ -4,3 +4,6 @@
 
 #import "React/RCTBridgeModule.h"
 #import <React/RCTEventEmitter.h>
+#include "RNLBeaconScanner.h"
+#include "RNLURLBeaconCompressor.h"
+#include "RNLBeacon+Distance.h"

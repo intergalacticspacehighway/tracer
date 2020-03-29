@@ -1,5 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, ScrollView, Alert, Platform, StyleSheet} from 'react-native';
+import {
+  View,
+  ScrollView,
+  Alert,
+  Platform,
+  StyleSheet,
+  NativeModules,
+} from 'react-native';
 //@ts-ignore
 import {BluetoothStatus} from 'react-native-bluetooth-status';
 import {BLE} from 'ble';
@@ -107,6 +114,9 @@ function Nearby() {
   const startEmittingAndReceiving = () => {
     BLE.startBroadcast();
     BLE.startScanning();
+    setInterval(() => {
+      NativeModules.Beacon.detectBeacons();
+    }, 1000);
   };
 
   const stopEmitting = () => {
