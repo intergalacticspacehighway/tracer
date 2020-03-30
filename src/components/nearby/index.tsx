@@ -20,18 +20,18 @@ const insertRecord = (e: IOnScanResult) => {
   console.log('on scan result ', e);
   let uuid = e.deviceId;
 
-  if (Platform.OS === 'ios') {
-    uuid =
-      e.deviceId.substr(0, 8) +
-      '-' +
-      e.deviceId.substr(8, 4) +
-      '-' +
-      e.deviceId.substr(12, 4) +
-      '-' +
-      e.deviceId.substr(16, 4) +
-      '-' +
-      e.deviceId.substr(20);
-  }
+  // if (Platform.OS === 'ios') {
+  //   uuid =
+  //     e.deviceId.substr(0, 8) +
+  //     '-' +
+  //     e.deviceId.substr(8, 4) +
+  //     '-' +
+  //     e.deviceId.substr(12, 4) +
+  //     '-' +
+  //     e.deviceId.substr(16, 4) +
+  //     '-' +
+  //     e.deviceId.substr(20);
+  // }
 
   const distance = getDistance(e.rssi, e.txPower);
   let user: INearbyUser = {
