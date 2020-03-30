@@ -16,39 +16,56 @@ import UIKit
 @objc(Beacon)
 class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDelegate
 {
-  
-  
+    var manager: CBCentralManager? = nil
   var localBeacon: CLBeaconRegion!
-  var beaconPeripheralData: NSDictionary!
+  var beaconPeripheralData: [String: Any]!
   var peripheralManager: CBPeripheralManager!
   var peripherals:[CBPeripheral] = []
-  var manager: CBCentralManager? = nil
   
   @objc
   override static func requiresMainQueueSetup() -> Bool {
     return true
   }
-  
+  @objc func appMovedToBackground()
+  {
+//    if !peripheralManager.isAdvertising {
+//      peripheralManager.startAdvertising(beaconPeripheralData as? [String: Any])
+//    }
+////    manager?.stopScan()
+//    manager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionRestoreIdentifierKey : "bleCentralManager"])
+//    manager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerOptionRestoreIdentifierKey : "bleCentralManager"])
+//
+      print("App moved to background!")
+  }
   
   @objc(startBroadcast:)
   func startBroadcast(uuid: String) -> Void
   {
     
+    let notificationCenter = NotificationCenter.default
+    notificationCenter.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
+       notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
     manager = CBCentralManager(delegate: self, queue: nil)
     
     
-    if localBeacon != nil {
-      stopBroadcast()
-    }
+//    if localBeacon != nil {
+//      stopBroadcast()
+//    }
     
     let localBeaconUUID = uuid
     let localBeaconMajor: CLBeaconMajorValue = 123
     let localBeaconMinor: CLBeaconMinorValue = 456
     
-    let uuid = UUID(uuidString: localBeaconUUID)!
-    localBeacon = CLBeaconRegion(proximityUUID: uuid, major: localBeaconMajor, minor: localBeaconMinor, identifier: "abcd")
-    
-    beaconPeripheralData = localBeacon.peripheralData(withMeasuredPower: -59)
+//    let uuid = UUID(uuidString: localBeaconUUID)!
+//    localBeacon = CLBeaconRegion(proximityUUID: uuid, major: localBeaconMajor, minor: localBeaconMinor, identifier: localBeaconUUID)
+    let uuid1:CBUUID = CBUUID(string: uuid)
+    //    beaconPeripheralData = localBeacon.peripheralData(withMeasuredPower: -59)
+        
+//    beaconPeripheralData = localBeacon.peripheralData(withMeasuredPower: -59)
+    beaconPeripheralData  = [
+        CBAdvertisementDataLocalNameKey : "848DA4E8-8A36-63D7888353F7",
+        CBAdvertisementDataServiceUUIDsKey : [uuid1]
+    ]
     
     peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
     print("uuid ", uuid)
@@ -72,7 +89,8 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
   func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
     if peripheral.state == .poweredOn {
       if !peripheralManager.isAdvertising {
-        peripheralManager.startAdvertising(beaconPeripheralData as? [String: Any])
+        peripheralManager.startAdvertising(beaconPeripheralData)
+        
       }
     } else if peripheral.state == .poweredOff {
       peripheralManager.stopAdvertising()
@@ -88,14 +106,23 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
     manager?.stopScan()
     print("scan stopped")
   }
+  func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
+    print(dict)
+  }
   //CBCentralMaganerDelegate code
   func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
     
    
       peripherals.append(peripheral)
+      if let yy = advertisementData["kCBAdvDataServiceUUIDs"] as? [AnyObject] {
+        print(yy[0])
+      }
+      print(peripheral.name)
       print(peripheral.state)
       print(RSSI)
       print(advertisementData)
+    
+        
       
       if let dta = advertisementData["kCBAdvDataManufacturerData"] as? Data
       {
@@ -134,10 +161,11 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
     if central.state == .poweredOn
     {
       if !(central.isScanning) {
-        manager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey : true])
-        //        DispatchQueue.main.asyncAfter(deadline: .now() + 60.0) {
-        //            self.stopScanForBLEDevice()
-        //        }
+        manager?.scanForPeripherals(withServices: nil, options: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+              self.manager?.stopScan()
+              self.manager?.scanForPeripherals(withServices: nil, options: nil)
+            }
       }
       
     }
@@ -146,7 +174,7 @@ class Beacon:  RCTEventEmitter,CBPeripheralManagerDelegate,CBCentralManagerDeleg
   @objc(startScanning:)
   func startScanning(uuid: String) -> Void
   {
-    manager?.scanForPeripherals(withServices: nil, options: nil)
+//    manager?.scanForPeripherals(withServices: nil, options: nil)
     
     //          DispatchQueue.main.asyncAfter(deadline: .now() + 60.0) {
     //              self.stopScanForBLEDevice()

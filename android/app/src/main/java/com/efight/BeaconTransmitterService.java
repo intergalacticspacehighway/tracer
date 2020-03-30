@@ -77,8 +77,9 @@ public class BeaconTransmitterService extends Service {
                 Beacon beacon = new Beacon.Builder()
                         .setManufacturer(0x4C00)
                         .setId1(uuid)
-                        .setId2("1")
-                        .setId3("2")
+                        .setId2(uuid)
+                        .setServiceUuid(1)
+                        .setId3(uuid)
                         .setTxPower(-59)
                         .build();
 
