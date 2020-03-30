@@ -35,6 +35,8 @@ import java.lang.reflect.Array;
 import java.util.List;
 
 public class BeaconScannerService extends Service {
+    static final String PARTIAL_UUID_STRING = "848da4e8-0793-5813";
+
     public static final String CHANNEL_ID = "BeaconScannerServiceChannel";
 
     @Override
@@ -63,7 +65,7 @@ public class BeaconScannerService extends Service {
                 .build();
         startForeground(2, notification);
 
-        
+
         mBluetoothLeScanner.startScan(mScanCallback);
 
 
@@ -116,6 +118,28 @@ public class BeaconScannerService extends Service {
 
     ScanCallback mScanCallback = new ScanCallback() {
 
+         WritableMap getReadableMap(Beacon beacon) {
+
+            WritableMap params = Arguments.createMap();
+
+
+                String deviceId = beacon.getIdentifier(0).toString();
+                double distance = beacon.getDistance();
+                Log.i("BLE", String.valueOf(distance) + " " + deviceId);
+                params.putString("deviceId", deviceId);
+                params.putInt("rssi", beacon.getRssi());
+
+                params.putDouble("distance", distance);
+
+                int txPower = beacon.getTxPower();
+                params.putInt("txPower", txPower);
+
+
+            return params;
+
+        }
+
+
         WritableMap getReadableMap(ScanResult result) {
 
             WritableMap params = Arguments.createMap();
@@ -143,50 +167,75 @@ public class BeaconScannerService extends Service {
 
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        public void onScanResult(int callbackType, ScanResult result) {
+
+        WritableMap handleScanResultParsing(ScanResult result) {
             if (result == null || result.getDevice() == null) {
-                return;
+                return null;
             }
 
+            Beacon beacon = beaconParser.fromScanData(result.getScanRecord().getBytes(), result.getRssi(), result.getDevice());
             List serviceUUIDs = result.getScanRecord().getServiceUuids();
-            if(result.getScanRecord().getServiceUuids() == null) {
-                return;
+
+            // Signal Could be from android
+            if (beacon != null && beacon.getIdentifier(0) != null) {
+                String deviceId = beacon.getIdentifier(0).toString();
+                // Definitely from android
+                if(deviceId != null && deviceId.contains(BeaconScannerService.PARTIAL_UUID_STRING)) {
+                    Log.i("BLE", "Traced a signal from android");
+                    return this.getReadableMap(beacon);
+
+                }
+            }
+            // Signal Could be from iOS
+            else if(serviceUUIDs != null) {
+                Object deviceUUID = serviceUUIDs.get(0);
+                // Definitely from IOS
+                if(deviceUUID != null && deviceUUID.toString().contains(BeaconScannerService.PARTIAL_UUID_STRING)) {
+                    Log.i("BLE", "Traced a signal from iOS");
+                    return this.getReadableMap(result);
+                }
             }
 
-
-//           result.getScanRecord().getServiceUuids();
-//            Beacon beacon = beaconParser.fromScanData(result.getScanRecord().getBytes(), result.getRssi(), result.getDevice());
-
-            WritableMap params = this.getReadableMap(result);
-
-
-            ReactContext currentContext = getReactApplicationContext();
-            currentContext
-                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit("onScanResult", params);
+            return null;
 
         }
 
-//        }
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        public void onScanResult(int callbackType, ScanResult result) {
+
+            WritableMap params = this.handleScanResultParsing(result);
+
+            if(params!= null) {
+                ReactContext currentContext = getReactApplicationContext();
+                currentContext
+                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("onScanResult", params);
+
+            }
+
+
+        }
+
 
         @Override
         public void onBatchScanResults(List<ScanResult> results) {
             Log.i("BLE", "Batch results " + results);
             WritableArray params = Arguments.createArray();
             for (ScanResult result : results) {
-//                Beacon beacon = beaconParser.fromScanData(result.getScanRecord().getBytes(), result.getRssi(), result.getDevice());
-//                if (beacon != null) {
-                    WritableMap map = this.getReadableMap(result);
-                    params.pushMap(map);
-//                }
+                    WritableMap map = this.handleScanResultParsing(result);
+                    if(params != null){
+                        params.pushMap(map);
+                    }
             }
 
-            ReactContext currentContext = getReactApplicationContext();
+            if(params.size() > 0) {
+                ReactContext currentContext = getReactApplicationContext();
 
-            currentContext
-                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit("onScanResultBulk", params);
+                currentContext
+                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("onScanResultBulk", params);
+            }
+
 
 
         }
@@ -219,6 +268,7 @@ public class BeaconScannerService extends Service {
             Log.e("BLE", "Discovery onScanFailed: " + errorCode);
         }
     };
+
 
 
     private void createNotificationChannel() {
