@@ -48,7 +48,7 @@ export function BottomTabNavigator() {
         name="Hotspots"
         component={HotSpots}
         options={{
-          tabBarLabel: 'HotSpots',
+          tabBarLabel: 'Hotspots',
           tabBarIcon: ({color}) => (
             <Image
               source={require('../../../assets/images/bubble.png')}

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Card} from 'react-native-paper';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import {INearbyUser} from 'types';
 import {Text} from 'react-native-paper';
 import {formatTimestamp} from 'utils';
@@ -20,7 +20,9 @@ export const UserCard = ({item}: IProps) => {
           <Text style={styles.distance}>{item.distance} metres (approx.)</Text>
         </View>
         <View>
-          <Text>{formatTimestamp(item.updatedAt)}</Text>
+          <Text style={{fontFamily: 'Montserrat-Regular'}}>
+            {formatTimestamp(item.updatedAt)}
+          </Text>
         </View>
       </View>
     </Card>
@@ -39,6 +41,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     marginTop: 16,
     padding: 20,
+    width: Dimensions.get('screen').width - 30,
   },
   idStyle: {
     fontFamily: 'Montserrat-Bold',
@@ -46,6 +49,7 @@ const styles = StyleSheet.create({
   },
   distance: {
     paddingTop: 10,
+    fontFamily: 'Montserrat-Regular',
     fontWeight: '300',
     opacity: 0.7,
   },
