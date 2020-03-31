@@ -4,7 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {Provider as PaperProvider, Appbar} from 'react-native-paper';
 import {theme} from './src/theme';
 import {colors} from './src/theme/colors';
-import {Login} from 'components';
+import {Login, Header} from 'components';
 import {BottomTabNavigator} from 'navigators';
 import {firebaseAuth} from 'firebase';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
@@ -67,19 +67,21 @@ const App = () => {
 
   return (
     <PaperProvider theme={theme}>
-      <StatusBar backgroundColor={colors['cool-blue-100']} />
+      <SafeAreaView>
+        <StatusBar backgroundColor={colors['cool-blue-100']} />
+      </SafeAreaView>
+
       {user.uuid ? (
-        <SideMenu
-          isOpen={isMenuOpen}
-          menu={<CustomDrawerContent handleClose={closeMenu} />}>
-          <Appbar.Header>
+        <>
+          {/* <Appbar.Header>
             <Appbar.Action onPress={toggleMenu} icon="menu"></Appbar.Action>
             <Appbar.Content title="eFight Covid-19"></Appbar.Content>
-          </Appbar.Header>
+          </Appbar.Header> */}
+          <Header />
           <NavigationContainer>
             <BottomTabNavigator />
           </NavigationContainer>
-        </SideMenu>
+        </>
       ) : (
         <Login />
       )}
@@ -88,12 +90,3 @@ const App = () => {
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-  bottom: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-});

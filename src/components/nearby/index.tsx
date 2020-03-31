@@ -4,17 +4,17 @@ import {View, ScrollView, Alert, Platform, StyleSheet} from 'react-native';
 import {BluetoothStatus} from 'react-native-bluetooth-status';
 import {BLE} from 'ble';
 import {useRecentDetectionsStore, addNearbyUser} from 'store';
-import {Text, Button} from 'react-native-paper';
+import {Text, Surface} from 'react-native-paper';
 import {getDistance} from 'utils';
 import {IOnScanResult, INearbyUser} from 'types';
 //@ts-ignore
 import {useBluetoothStatus} from 'react-native-bluetooth-status';
-import {colors} from 'theme';
+import {colors, theme} from 'theme';
 import {UserCard} from '../user-card';
 import {useUserStore} from 'services';
-import {useTranslatedText} from '../shared';
+import {useTranslatedText, ScreenContainer} from '../shared';
 //@ts-ignore
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const insertRecord = (e: IOnScanResult) => {
   console.log('on scan result ', e);
@@ -121,30 +121,34 @@ function Nearby() {
   const stopTrackingText = useTranslatedText('stopTracking');
 
   return (
-    <>
+    <ScreenContainer>
       <View style={styles.container}>
+        <View style={styles.borderWrapper2}>
+          <View style={styles.borderWrapper1}>
+            <Surface style={styles.scanButton}>
+              {isScaning ? (
+                <TouchableOpacity
+                  style={buttonStyle.container}
+                  onPress={stopEmitting}>
+                  <Text style={buttonStyle.btnlabel}>{stopTrackingText}</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={buttonStyle.container}
+                  onPress={startEmittingAndReceiving}>
+                  <Text style={buttonStyle.btnlabel}>{startTrackingText}</Text>
+                </TouchableOpacity>
+              )}
+            </Surface>
+          </View>
+        </View>
         <View style={styles.idWrapper}>
           <Text style={styles.idText}>
-            My Device ID -{' '}
-            <MaterialCommunityIcons
-              name="account"
-              color={colors['cool-grey-800']}
-              size={18}
-            />
-            <Text style={{color: colors['cool-blue-100'], fontWeight: 'bold'}}>
-              {user.uuid.substr(24, 12)}
-            </Text>
+            ID{'  '}
+            <Text>{user.uuid.substr(24, 12)}</Text>
           </Text>
         </View>
-        {isScaning ? (
-          <Button style={styles.scanButton} onPress={stopEmitting}>
-            {stopTrackingText}
-          </Button>
-        ) : (
-          <Button style={styles.scanButton} onPress={startEmittingAndReceiving}>
-            {startTrackingText}
-          </Button>
-        )}
+        <Text style={styles.nearbyLabel}>Recent Nearby Users</Text>
         <ScrollView style={{width: '100%'}}>
           <View>
             {detections.map(user => {
@@ -153,23 +157,57 @@ function Nearby() {
           </View>
         </ScrollView>
       </View>
-    </>
+    </ScreenContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  scanButton: {
-    borderRadius: 100,
-    height: 200,
-    width: 200,
-    borderWidth: 6,
-    elevation: 10,
-    borderColor: colors['cool-blue-80'],
-    backgroundColor: 'white',
-    marginTop: 30,
-    justifyContent: 'center',
+const buttonStyle = StyleSheet.create({
+  btnlabel: {
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: 4,
+    color: theme.colors.primary,
+    fontSize: 16,
+  },
+  container: {
+    width: 120,
+    height: 120,
     alignItems: 'center',
-    color: 'white',
+    justifyContent: 'center',
+  },
+});
+
+const styles = StyleSheet.create({
+  nearbyLabel: {
+    color: '#044C9D',
+    opacity: 0.4,
+  },
+  safeText: {
+    fontSize: 20,
+  },
+  borderWrapper2: {
+    height: 240,
+    width: 240,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 120,
+    borderColor: 'rgba(112, 112, 112, 0.1)',
+    backgroundColor: 'transparent',
+  },
+  borderWrapper1: {
+    height: 180,
+    width: 180,
+    borderWidth: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 90,
+    borderColor: 'rgba(112, 112, 112, 0.1)',
+    backgroundColor: 'transparent',
+  },
+  scanButton: {
+    borderRadius: 60,
+    elevation: 10,
   },
   textStyle: {
     fontSize: 16,

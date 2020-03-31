@@ -1,6 +1,6 @@
 import React from 'react';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {colors} from 'theme';
+import {colors, theme} from 'theme';
 import {Nearby, CovidTest, useTranslatedText} from 'components';
 import {History} from 'components';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -16,7 +16,7 @@ export function BottomTabNavigator() {
     <Tab.Navigator
       initialRouteName="Nearby"
       activeColor="white"
-      barStyle={{backgroundColor: colors['cool-blue-100']}}
+      barStyle={{backgroundColor: theme.colors.primary}}
       sceneAnimationEnabled={false}>
       <Tab.Screen
         name="Nearby"
