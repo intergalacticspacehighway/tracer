@@ -42,7 +42,7 @@ const insertRecord = (e: IOnScanResult) => {
   const distance = getDistance(e.rssi, e.txPower);
   let user: INearbyUser = {
     uuid,
-    distance: Number(distance.toPrecision(4)),
+    distance: Number(distance.toFixed(2)),
     updatedAt: new Date(),
     createdAt: new Date(),
   };

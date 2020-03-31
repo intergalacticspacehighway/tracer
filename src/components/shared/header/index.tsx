@@ -1,4 +1,4 @@
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, Share} from 'react-native';
 import React, {useState} from 'react';
 import {Text} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -7,6 +7,13 @@ import {theme} from 'theme';
 import {useTranslation} from 'react-i18next';
 import {changeLanguage} from 'utils';
 import {logout} from 'services';
+import {useTranslatedText} from '../translated-text';
+const shareAppURL = () => {
+  Share.share({
+    title: 'eFight',
+    message: 'https://efight.s3.ap-south-1.amazonaws.com/eFight.apk',
+  });
+};
 
 const Header = () => {
   return (
@@ -41,6 +48,7 @@ const Header = () => {
 const HeaderMenu = () => {
   const [visible, setVisible] = useState(false);
 
+  const shareThisAppText = useTranslatedText('shareThisApp');
   const _openMenu = () => setVisible(true);
 
   const _closeMenu = () => setVisible(false);
@@ -85,6 +93,12 @@ const HeaderMenu = () => {
             _closeMenu();
           }}
           title="Gujarati"
+        />
+        <Divider />
+        <Menu.Item
+          onPress={shareAppURL}
+          title={shareThisAppText}
+          icon="share"
         />
         <Divider />
         <Menu.Item
