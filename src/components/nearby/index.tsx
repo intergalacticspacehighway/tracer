@@ -129,14 +129,28 @@ function Nearby() {
   return (
     <ScreenContainer>
       <View style={styles.container}>
-        <View style={styles.borderWrapper2}>
-          <View style={styles.borderWrapper1}>
+        <View
+          style={{
+            ...styles.borderWrapper2,
+            borderColor: isScaning
+              ? 'rgba(12,161,246, 0.2)'
+              : 'rgba(112, 112, 112, 0.1)',
+          }}>
+          <View
+            style={{
+              ...styles.borderWrapper1,
+              borderColor: isScaning
+                ? 'rgba(4,76,157, 0.4)'
+                : 'rgba(112, 112, 112, 0.1)',
+            }}>
             <Surface style={styles.scanButton}>
               {isScaning ? (
                 <TouchableOpacity
-                  style={buttonStyle.container}
+                  style={buttonStyle.stopContainer}
                   onPress={stopEmitting}>
-                  <Text style={buttonStyle.btnlabel}>{stopTrackingText}</Text>
+                  <Text style={{...buttonStyle.btnlabel, color: 'white'}}>
+                    {stopTrackingText}
+                  </Text>
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
@@ -149,6 +163,15 @@ function Nearby() {
           </View>
         </View>
         <View style={styles.idWrapper}>
+          {!isScaning && (
+            <View style={styles.alertMessageWrapper}>
+              <Text style={styles.stayActive}>Stay Active</Text>
+              <Text style={styles.secondaryText}>
+                by pressing start button above
+              </Text>
+            </View>
+          )}
+
           <Text style={styles.idText}>
             ID{' '}
             <Text style={{fontSize: 14, fontFamily: 'Montserrat-Medium'}}>
@@ -156,14 +179,16 @@ function Nearby() {
             </Text>
           </Text>
         </View>
-        <Text style={styles.nearbyLabel}>Recent Nearby Users</Text>
-        <ScrollView style={{width: '100%'}}>
-          <View>
-            {detections.map(user => {
-              return <UserCard item={user} key={user.uuid} />;
-            })}
+        {isScaning && (
+          <View style={{alignItems: 'center', marginTop: 10}}>
+            <Text style={styles.nearbyLabel}>Recent Nearby Users</Text>
+            <ScrollView style={{width: '100%'}}>
+              {detections.map(user => {
+                return <UserCard item={user} key={user.uuid} />;
+              })}
+            </ScrollView>
           </View>
-        </ScrollView>
+        )}
       </View>
     </ScreenContainer>
   );
@@ -183,15 +208,36 @@ const buttonStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  stopContainer: {
+    width: 120,
+    height: 120,
+    backgroundColor: theme.colors.primary,
+    alignItems: 'center',
+    borderRadius: 60,
+    justifyContent: 'center',
+  },
 });
 
 const styles = StyleSheet.create({
+  secondaryText: {
+    color: theme.colors.accent,
+    fontSize: 18,
+    fontFamily: 'Montserrat-Medium',
+  },
+  stayActive: {
+    fontFamily: 'Montserrat-Bold',
+    color: theme.colors.accent,
+    fontSize: 24,
+  },
+  alertMessageWrapper: {
+    marginBottom: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   nearbyLabel: {
     color: '#044C9D',
+    fontFamily: 'Montserrat-Regular',
     opacity: 0.4,
-  },
-  safeText: {
-    fontSize: 20,
   },
   borderWrapper2: {
     height: 240,
@@ -224,7 +270,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   idWrapper: {
@@ -234,7 +279,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 15,
-    height: 40,
     marginTop: 10,
   },
   idText: {

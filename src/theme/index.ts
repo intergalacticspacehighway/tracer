@@ -12,7 +12,7 @@ export const theme = {
     background: 'white',
     onSurface: 'white',
     primary: '#044C9D',
-    accent: colors['cool-blue-100'],
+    accent: '#0CA1F6',
     text: 'black',
     disabled: color(colors['cool-grey-300'])
       .alpha(0.26)
@@ -26,7 +26,7 @@ export const theme = {
   fonts: configureFonts({
     default: {
       regular: {
-        fontFamily: 'Montserrat-Regular',
+        fontFamily: '`Montserrat`-Regular',
         fontWeight: '400',
       },
       medium: {
