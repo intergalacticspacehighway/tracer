@@ -1,7 +1,8 @@
 import React from 'react';
+import {Image} from 'react-native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {colors, theme} from 'theme';
-import {Nearby, CovidTest, useTranslatedText} from 'components';
+import {theme} from 'theme';
+import {Nearby, CovidTest, useTranslatedText, HotSpots} from 'components';
 import {History} from 'components';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
@@ -16,6 +17,7 @@ export function BottomTabNavigator() {
     <Tab.Navigator
       initialRouteName="Nearby"
       activeColor="white"
+      labeled
       barStyle={{backgroundColor: theme.colors.primary}}
       sceneAnimationEnabled={false}>
       <Tab.Screen
@@ -39,6 +41,19 @@ export function BottomTabNavigator() {
           tabBarLabel: history,
           tabBarIcon: ({color}) => (
             <MaterialCommunityIcons name="history" color={color} size={25} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Hotspots"
+        component={HotSpots}
+        options={{
+          tabBarLabel: 'HotSpots',
+          tabBarIcon: ({color}) => (
+            <Image
+              source={require('../../../assets/images/bubble.png')}
+              style={{width: 25, height: 25}}
+            />
           ),
         }}
       />

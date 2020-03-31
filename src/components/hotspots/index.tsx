@@ -1,6 +1,6 @@
 import React from 'react';
 import {WebView} from 'react-native-webview';
-import {ActivityIndicator, Appbar} from 'react-native-paper';
+import {ActivityIndicator} from 'react-native-paper';
 
 const Spinner = () => (
   <ActivityIndicator
@@ -9,7 +9,7 @@ const Spinner = () => (
   />
 );
 
-export function CovidTest() {
+export function HotSpots() {
   return (
     <>
       <WebView
@@ -18,7 +18,7 @@ export function CovidTest() {
         originWhitelist={['*']}
         allowsLinkPreview
         source={{
-          uri: 'https://www.evital.in/risk-tests/covid-19/mobile/?from=eFight',
+          uri: 'https://www.evital.in/covid-19/hotspots/mobile/',
         }}
         renderLoading={Spinner}
       />

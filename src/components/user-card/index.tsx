@@ -1,11 +1,9 @@
 import React from 'react';
 import {Card} from 'react-native-paper';
-import {Dimensions, View, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {INearbyUser} from 'types';
-import {useTranslatedText} from '../shared';
 import {Text} from 'react-native-paper';
 import {formatTimestamp} from 'utils';
-const {height, width} = Dimensions.get('window');
 
 interface IProps {
   item: INearbyUser;
@@ -13,33 +11,48 @@ interface IProps {
 
 export const UserCard = ({item}: IProps) => {
   const {uuid} = item;
-  const distance = useTranslatedText('Distance');
-  const date = useTranslatedText('Date');
 
   return (
-    <Card style={{backgroundColor: 'white', margin: 10}}>
-      <Card.Title title={uuid.substr(24, 12)} />
-      <Card.Content>
-        <View style={{flexDirection: 'row'}}>
-          <Text style={styles.label}>{distance}: </Text>
-          <Text>{item.distance} m (approx.)</Text>
+    <Card style={styles.container}>
+      <View style={styles.flexWrapper}>
+        <View>
+          <Text style={styles.idStyle}>{uuid.substr(24, 12)}</Text>
+          <Text style={styles.distance}>{item.distance} metres (approx.)</Text>
         </View>
-        <View style={{flexDirection: 'row'}}>
-          <Text style={styles.label}>{date}: </Text>
+        <View>
           <Text>{formatTimestamp(item.updatedAt)}</Text>
         </View>
-      </Card.Content>
+      </View>
     </Card>
   );
 };
 
 const styles = StyleSheet.create({
+  flexWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   container: {
-    height: height,
-    width: width,
-    paddingBottom: 120,
+    backgroundColor: 'white',
+    marginLeft: 16,
+    marginRight: 16,
+    marginBottom: 6,
+    marginTop: 16,
+    padding: 20,
+  },
+  idStyle: {
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 14,
+  },
+  distance: {
+    paddingTop: 10,
+    fontWeight: '300',
+    opacity: 0.7,
   },
   label: {
     fontWeight: 'bold',
+  },
+  flexRow: {
+    flexDirection: 'row',
   },
 });

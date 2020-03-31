@@ -29,5 +29,8 @@ export const logout = async () => {
 export const getCurrentUserUUID = () => {
   return api.getState().user.uuid;
 };
+export const getCurrentUser = () => {
+  return api.getState().user;
+};
 
 export {useUserStore};

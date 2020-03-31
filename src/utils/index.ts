@@ -1,8 +1,8 @@
 import {format} from 'date-fns';
-import {PermissionsAndroid, Platform} from 'react-native';
+import {PermissionsAndroid, Platform, AsyncStorage} from 'react-native';
 
 export const formatTimestamp = (timestamp: number) => {
-  return format(new Date(timestamp), 'do MMM yyyy KK:mm aaaa');
+  return format(new Date(timestamp), 'do MMM yy HH:mm');
 };
 
 export const formatDate = (timestamp: number) => {
@@ -45,3 +45,8 @@ export function getDistance(rssi: number, txPower: number = 59) {
     return accuracy;
   }
 }
+
+export const changeLanguage = (i18n: any, lang: string) => {
+  i18n.changeLanguage(lang);
+  AsyncStorage.setItem('defaultLang', lang);
+};

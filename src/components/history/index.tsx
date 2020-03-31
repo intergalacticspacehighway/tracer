@@ -9,7 +9,8 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {colors} from 'theme';
 import {UserCard} from '../user-card';
 import {subDays, startOfDay} from 'date-fns';
-import {endOfDay} from 'date-fns/esm';
+import {endOfDay, addDays} from 'date-fns/esm';
+import {ScreenContainer} from '../shared';
 
 const types = {
   loading: 'loading',
@@ -65,7 +66,7 @@ const StartAndEndDate = ({start, end, setStart, setEnd}: any) => {
       <View
         style={{
           flexDirection: 'row',
-          margin: 10,
+          margin: 16,
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
@@ -118,7 +119,7 @@ const today = new Date();
 export function History() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [start, setStart] = useState(startOfDay(subDays(today, 1)));
-  const [end, setEnd] = useState(endOfDay(today));
+  const [end, setEnd] = useState(startOfDay(addDays(today, 1)));
 
   useEffect(() => {
     async function getData() {
@@ -148,7 +149,7 @@ export function History() {
   }
 
   return (
-    <View>
+    <ScreenContainer>
       <StartAndEndDate
         setEnd={setEnd}
         end={end}
@@ -162,6 +163,6 @@ export function History() {
           })}
         </ScrollView>
       )}
-    </View>
+    </ScreenContainer>
   );
 }

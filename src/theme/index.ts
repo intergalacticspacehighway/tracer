@@ -14,44 +14,6 @@ export const theme = {
     primary: '#044C9D',
     accent: colors['cool-blue-100'],
     text: 'black',
-    fonts: configureFonts({
-      ios: {
-        regular: {
-          fontFamily: 'Montserrat-Regular',
-          fontWeight: 'normal',
-        },
-        medium: {
-          fontFamily: 'Montserrat-Medium',
-          fontWeight: 'normal',
-        },
-        light: {
-          fontFamily: 'Montserrat-Light',
-          fontWeight: 'normal',
-        },
-        thin: {
-          fontFamily: 'Montserrat-Light',
-          fontWeight: 'normal',
-        },
-      },
-      android: {
-        regular: {
-          fontFamily: 'Montserrat-Regular',
-          fontWeight: 'normal',
-        },
-        medium: {
-          fontFamily: 'Montserrat-Medium',
-          fontWeight: 'normal',
-        },
-        light: {
-          fontFamily: 'Montserrat-Light',
-          fontWeight: 'normal',
-        },
-        thin: {
-          fontFamily: 'Montserrat-Light',
-          fontWeight: 'normal',
-        },
-      },
-    }),
     disabled: color(colors['cool-grey-300'])
       .alpha(0.26)
       .rgb()
@@ -61,6 +23,26 @@ export const theme = {
       .rgb()
       .string(),
   },
+  fonts: configureFonts({
+    default: {
+      regular: {
+        fontFamily: 'Montserrat-Regular',
+        fontWeight: '400',
+      },
+      medium: {
+        fontFamily: 'Montserrat-Medium',
+        fontWeight: '500',
+      },
+      light: {
+        fontFamily: 'Montserrat-Light',
+        fontWeight: '300',
+      },
+      thin: {
+        fontFamily: 'Montserrat-Light',
+        fontWeight: '300',
+      },
+    },
+  }),
 };
 
 export {colors};

@@ -1,5 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, ScrollView, Alert, Platform, StyleSheet} from 'react-native';
+import {
+  View,
+  ScrollView,
+  Alert,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 //@ts-ignore
 import {BluetoothStatus} from 'react-native-bluetooth-status';
 import {BLE} from 'ble';
@@ -11,10 +18,9 @@ import {IOnScanResult, INearbyUser} from 'types';
 import {useBluetoothStatus} from 'react-native-bluetooth-status';
 import {colors, theme} from 'theme';
 import {UserCard} from '../user-card';
-import {useUserStore} from 'services';
+import {useUserStore, getCurrentUser} from 'services';
 import {useTranslatedText, ScreenContainer} from '../shared';
 //@ts-ignore
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const insertRecord = (e: IOnScanResult) => {
   console.log('on scan result ', e);
@@ -144,8 +150,10 @@ function Nearby() {
         </View>
         <View style={styles.idWrapper}>
           <Text style={styles.idText}>
-            ID{'  '}
-            <Text>{user.uuid.substr(24, 12)}</Text>
+            ID{' '}
+            <Text style={{fontSize: 14, fontFamily: 'Montserrat-Medium'}}>
+              {user.uuid.substr(24, 12)}
+            </Text>
           </Text>
         </View>
         <Text style={styles.nearbyLabel}>Recent Nearby Users</Text>
@@ -163,7 +171,7 @@ function Nearby() {
 
 const buttonStyle = StyleSheet.create({
   btnlabel: {
-    fontWeight: '800',
+    fontFamily: 'Montserrat-Bold',
     textTransform: 'uppercase',
     letterSpacing: 4,
     color: theme.colors.primary,
@@ -207,7 +215,7 @@ const styles = StyleSheet.create({
   },
   scanButton: {
     borderRadius: 60,
-    elevation: 10,
+    elevation: 20,
   },
   textStyle: {
     fontSize: 16,
@@ -221,7 +229,6 @@ const styles = StyleSheet.create({
   },
   idWrapper: {
     backgroundColor: 'white',
-    elevation: 2,
     paddingLeft: 15,
     paddingRight: 15,
     justifyContent: 'center',
@@ -232,7 +239,8 @@ const styles = StyleSheet.create({
   },
   idText: {
     color: colors['cool-grey-700'],
-    fontWeight: 'bold',
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 14,
   },
 });
 

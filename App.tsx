@@ -1,32 +1,19 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {SafeAreaView, StatusBar, StyleSheet, AsyncStorage} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {SafeAreaView, StatusBar, AsyncStorage} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {Provider as PaperProvider, Appbar} from 'react-native-paper';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {theme} from './src/theme';
-import {colors} from './src/theme/colors';
 import {Login, Header} from 'components';
 import {BottomTabNavigator} from 'navigators';
 import {firebaseAuth} from 'firebase';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {createUserRecord, useUserStore} from 'services';
-import Drawer from 'react-native-drawer';
-import {CustomDrawerContent} from './src/navigators/drawer';
-import SideMenu from 'react-native-side-menu';
 import {useTranslation} from 'react-i18next';
 import './src/localization';
 
 const App = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {i18n} = useTranslation();
   const [defaultLangLoaded, setDefaultLangLoaded] = useState(false);
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
 
   const {user} = useUserStore();
 
@@ -68,7 +55,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView>
-        <StatusBar backgroundColor={colors['cool-blue-100']} />
+        <StatusBar backgroundColor={theme.colors.primary} />
       </SafeAreaView>
 
       {user.uuid ? (
