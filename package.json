@@ -40,7 +40,7 @@
     "react-native-modal-datetime-picker": "^8.5.1",
     "react-native-neomorph-shadows": "0.0.8",
     "react-native-paper": "^3.6.0",
-    "react-native-reanimated": "^1.7.1",
+    "react-native-reanimated": "^2.10.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.4.0",
     "react-native-side-menu": "^1.1.3",
